@@ -1,5 +1,5 @@
 clear
-use "/Users/tinoreskovic/Desktop/research media/DATA"
+use "/Users/tinoreskovic/Desktop/research media/raw data.dta"
 //PART 1: guardian, independent, telegraph:
 reg value mentionseng3 primary i.pos i.transfer_year transfer_age games
 rvfplot
