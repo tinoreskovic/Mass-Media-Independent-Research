@@ -1,48 +1,46 @@
 clear all
-global input "/Users/lilyhoffman/Desktop/MMPaper/Input/"
-global output "/Users/lilyhoffman/Desktop/MMPaper/Output/"
-global temp "/Users/lilyhoffman/Desktop/MMPaper/Temp/"
-global set "/Users/lilyhoffman/Desktop/MMPaper/Set_up/"
-
 ** Program: Creates county-town crossawalk; merges radio stations to respective counties; merges radio stations
 ** to the voting data; merges voting data to the 1930 radio ownership census 
 
+global output "\Users\lshoffma\Google Drive\Mass Media\Lily\Output\"
+global input "\Users\lshoffma\Google Drive\Mass Media\Lily\Data\State County Lists\"
+
+
 *** Compile County-Town crosswalk *** 
-import excel ${input}CT_County.xlsx, sheet("Sheet1") firstrow clear
+import excel "C:${input}CT_county.xlsx", sheet("Sheet1") firstrow clear
 keep Townname County 
 gen state = "CT"
 duplicates drop 
 rename (Townname County) (town county) 
-save ${output}CT_county, replace 
+save "C:${output}CT_county", replace 
 
-import excel ${input}ME_County.xlsx, sheet("Sheet1") firstrow clear
+import excel "C:${input}ME_county.xlsx", sheet("Sheet1") firstrow clear
 drop ipCode
 gen state = "ME"
 duplicates drop
 rename (Town County) (town county)
-save ${output}ME_county, replace
+save "C:${output}ME_county", replace
 
-import excel ${input}MO_County.xlsx, sheet("Sheet1") firstrow clear
+import excel "C:${input}MO_county.xlsx", sheet("Sheet1") firstrow clear
 keep B C
 replace B = "" in 12
 replace C = "" in 12 
 rename (B C) (town county) 
 drop if count == "" 
 gen state = "MO"
-save ${output}MO_county, replace
-
+save "C:${output}MO_county", replace
 
 
 foreach state in AL MA NH RI VT DE  RI VT DE NJ NY PA IL IN MI OH WI IA KS MN  NE ND SD VA AR FL GA LA MS NC SC TX ///
 KY MD OK TN WV AZ CO ID MT NV NM UT WY CA OR WA  {
-import excel ${input}`state'_County.xlsx, sheet("Sheet1") firstrow clear
+import excel "C:${input}`state'_county.xlsx", sheet("Sheet1") firstrow clear
 gen state = "`state'"
 drop ZipCode ZipCodeMap
 duplicates drop 
 rename (City County) (town county)
 drop if town == ""
 drop if county == ""
-save ${output}`state'_county, replace
+save "C:${output}`state'_county", replace
 }
 
 foreach state in AL MA NH RI VT DE  RI VT DE NJ NY PA IL IN MI OH WI IA KS MN NE ND SD VA AR FL GA LA MS NC SC TX ///

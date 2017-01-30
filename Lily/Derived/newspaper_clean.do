@@ -7,7 +7,7 @@ global set "/Users/lilyhoffman/Desktop/MMPaper/Set_up/"
 
 
 *****************************************************
-use "/Users/lilyhoffman/Desktop/MMPaper/Input/family_census_1930.dta", clear
+use "C:\Users\lshoffma\Google Drive\Mass Media\Lily\Data\family_census_1930.dta", clear
 
 keep fips state_code county 
 drop if missing(fips)
