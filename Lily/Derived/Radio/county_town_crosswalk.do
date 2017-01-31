@@ -1,6 +1,5 @@
 clear all
-** Program 2: Creates county-town crossawalk; merges radio stations to respective counties; merges radio stations
-** to the voting data; merges voting data to the 1930 radio ownership census 
+** Program 2: Creates county-town crossawalk; merges radio stations to respective counties
 
 global output "\Users\lshoffma\Google Drive\Mass Media\Lily\Output\"
 global input "\Users\lshoffma\Google Drive\Mass Media\Lily\Data\State County Lists\"
