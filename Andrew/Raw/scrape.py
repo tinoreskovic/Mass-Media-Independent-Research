@@ -49,12 +49,12 @@ def scrape_scmp(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
             text_tag = str(article_html.find_all('p'))
             text = re.sub(re.compile('<.*?>'), ' ', text_tag)
 
-            os.makedirs('.\SCMP')
-            f = open('SCMP\\' + 'SCMP_' + article_count + '.txt','w', encoding='utf-8')
-            f.write(str(year) + '\n' + str(month) + '\n' + str(day) + '\n' + author + '\n' + arttext)
+            os.makedirs('..\\Mass Media\\Andrew\\Raw\\SCMP')
+            f = open('..\\Mass Media\\Andrew\\Raw\\SCMP\\' + 'SCMP_' + article_count + '.txt','w', encoding='utf-8')
+            f.write(str(year) + '\n' + str(month) + '\n' + str(day) + '\n' + author + '\n' + text)
             f.close()
             article_count += 1
-    return month_count
+    return
 
 ######################STD#######################################################
 def scrape_std(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
@@ -103,9 +103,9 @@ def scrape_std(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
                     author_tag = 'None'
                     break
         author = re.sub(re.compile('<.*?>'), ' ', author_tag).strip()
-        os.makedirs('.\STD')
-        f = open('STD\\' + 'STD' + article_count + '.txt','w', encoding='utf-8')
-        f.write(str(year) + '\n' + str(month) + '\n' + str(day) + '\n' + author + '\n' + arttext)
+        os.makedirs('..\\Mass Media\\Andrew\\Raw\\STD')
+        f = open('..\\Mass Media\\Andrew\\Raw\\STD\\' + 'STD_' + article_count + '.txt','w', encoding='utf-8')
+        f.write(str(year) + '\n' + str(month) + '\n' + str(day) + '\n' + author + '\n' + text)
         f.close()
         article_count += 1
-    return month_count
+    return

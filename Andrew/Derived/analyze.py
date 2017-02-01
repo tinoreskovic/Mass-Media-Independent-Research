@@ -1,55 +1,55 @@
-import numpy as np
 import csv
+import datetime
 import os
+import numpy as np
 import re
-newsmonth = np.zeros((17, 5))
-authorarray = np.array([])
 
-#'index' 'xinhua' 'collcount' 'corrcount' 'artcount'
+def build_data(paper, start_date, end_date, d = 0)
+    month_count = int(end_date.year - start_date.year)*12 + int(end_date.month-start_date.month)
 
-#artunit = np.zeros(25270, 3)
-#artunit[0, 0] = 'index'
-#newsmonth[0, 1] = 'controcount'
-#newsmonth[0, 2] = 'artcount'
+    #'xinhua count' 'collective action count' 'leader count' 'article count'
+    data = np.array((month_count, 4))
 
-for filename in os.listdir():
-    if filename.endswith(".txt") and filename != 'corr.txt' and filename != 'coll.txt' and filename != 'legco56.txt' and filename != 'ccp1516.txt':
+    for filename in os.listdir('..\\Mass Media\\Andrew\\Raw\\' + paper)
         with open(filename, 'r', encoding = 'utf-8') as f:
-            data = f.readlines()
-            year = int(data[0][:-1])
-            month = int(data[1][:-1])
-            day = int(data[2][:-1])
-            author = data[3][:-1]
-            authorarray = np.append(authorarray, [author])
+            article_data = f.readlines()
+            year = int(article_data[0][:-1])
+            month = int(article_data[1][:-1])
+            day = int(article_data[2][:-1])
+            author = article_data[3][:-1]
+            author_array = np.append(authorarray, [author])
             try:
-                text = data[4].lower()
+                text = article_data[4]
+                text = re.sub(r'\W+', ' ', text).lower()
             except:
+                text = 'Multimedia'
                 continue
-            index = year%2015 * 12 - 7 + month
-            newsmonth[index, 0] = index
-        #if 'hong kong' not in text and 'china' not in text:
-        #    continue
+            if d == 1:
+                if 'china' in text or 'hong kong' in text:
+                    continue
+            index = (year - int(start_date.year)) * 12 + (month - int(start_date.month))
+
         if 'xinhua' in author or 'xinhua' in text:
-            newsmonth[index, 1] += 1
-        with open('coll.txt', 'r') as fcoll:
-            for line in fcoll:
+            data[index, 1] += 1
+        with open('collective_action.txt', 'r') as f_collact:
+            for line in f_collact:
                 if line in text:
-                    newsmonth[index, 2] += 1
-        with open('legco56.txt', 'r') as legco:
-            for line in legco:
+                    data[index, 2] += 1
+        with open('legco56.txt', 'r') as f_legco:
+            for line in f_legco:
+                line1 = re.sub(r'\W+', ' ', line).lower()
+                if line in text:
+                    data[index, 3] += 1
+        with open('ccp1516.txt', 'r') as f_ccp:
+            for line in f_ccp:
                 line1 = re.sub(r'\W+', ' ', line).lower()
                 if line1 in text:
-                    newsmonth[index, 3] += 1
-        with open('ccp1516.txt', 'r') as ccp:
-            for line in ccp:
-                line1 = re.sub(r'\W+', ' ', line).lower()
-                if line1 in text:
-                    newsmonth[index, 3] += 1
-        newsmonth[index, 4] += 1
+                    data[index, 3] += 1
+        data[index, 4] += 1
 
-print(newsmonth)
+    author_array = np.unique(author_array)
 
-authorarray = np.unique(authorarray)
+    np.savetxt('..\\Mass Media\\Andrew\\Derived\\' + paper + '_data.csv', data, delimiter = ',')
+    np.savetxt('..\\Mass Media\\Andrew\\Derived\\' + paper + '_author.csv', author_array, delimiter = ',', fmt = '%s')
 
-np.savetxt("scmp.csv", newsmonth, delimiter = ',')
-np.savetxt("scmp_author.csv", authorarray, delimiter = ',', fmt = '%s')
+return
