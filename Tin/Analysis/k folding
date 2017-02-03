@@ -1,9 +1,5 @@
 clear
-use "/Users/tinoreskovic/Desktop/research media/DATA initial.dta"
-//PART 1: guardian, independent, telegraph:
-gen logvalue = log(value)
-gen logmentions = log(mentionseng3)
-//
+use "/Users/tinoreskovic/Desktop/research media/raw data.dta"
 //10 random groups: 2-folding
 set seed 123456789
 generate rannum = uniform()
