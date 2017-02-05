@@ -2,10 +2,10 @@
 
 clear all
 global input "~\Google Drive\Mass Media\Lily\Data\Radio List: 1922-1931\"
-global output "~\Google Drive\Mass Media\Lily\Output\"
-global github "/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/Raw/votin
-> g.dta"
+global output "~/Google Drive/Mass Media/Lily/Output/"
+global github "~/Mass-Media-Independent-Research/Lily/"
 
+log 
 
 cap program drop set_up 
 program set_up
@@ -38,7 +38,7 @@ rename (Call City State) (station town state)
 gen frequency = 833 
 drop Licensee
 gen year = 1922
-save "${output}radio_1922", replace
+save "${output}radio_1922.dta", replace
 
 import excel "${input}radio_1923.xlsx", sheet("Sheet1") clear
 gen year = 1923
