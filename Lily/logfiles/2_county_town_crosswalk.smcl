@@ -1,0 +1,561 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/2_county_town_crosswalk.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 5 Feb 2017, 17:22:13
+{txt}
+{com}. 
+. global input "~/Google Drive/Mass Media/Lily/Data/State County Lists/"
+{txt}
+{com}. global output "~/Google Drive/Mass Media/Lily/Output/"
+{txt}
+{com}. 
+. *** Compile County-Town crosswalk *** 
+. import excel "${c -(}input{c )-}CT_county.xlsx", firstrow clear
+{res}{txt}
+{com}. keep Townname County 
+{txt}
+{com}. gen state = "CT"
+{txt}
+{com}. duplicates drop 
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(0 observations are duplicates)
+
+{com}. rename (Townname County) (town county) 
+{res}{txt}
+{com}. save "${c -(}output{c )-}CT_county", replace 
+{txt}file ~/Google Drive/Mass Media/Lily/Output/CT_county.dta saved
+
+{com}. 
+. import excel "${c -(}input{c )-}ME_county.xlsx",  firstrow clear
+{res}{txt}
+{com}. drop ipCode
+{txt}
+{com}. gen state = "ME"
+{txt}
+{com}. duplicates drop
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(28 observations deleted)
+
+{com}. rename (Town County) (town county)
+{res}{txt}
+{com}. save "${c -(}output{c )-}ME_county", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Output/ME_county.dta saved
+
+{com}. 
+. import excel "${c -(}input{c )-}MO_county.xlsx", firstrow clear
+{res}{txt}
+{com}. keep B C
+{txt}
+{com}. replace B = "" in 12
+{txt}(1 real change made)
+
+{com}. replace C = "" in 12 
+{txt}(1 real change made)
+
+{com}. rename (B C) (town county) 
+{res}{txt}
+{com}. drop if count == "" 
+{txt}(41 observations deleted)
+
+{com}. gen state = "MO"
+{txt}
+{com}. save "${c -(}output{c )-}MO_county", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Output/MO_county.dta saved
+
+{com}. 
+. 
+. foreach state in AL MA NH RI VT DE RI VT DE NJ NY PA IL IN MI OH WI IA KS MN NE ND SD VA AR FL GA LA MS NC SC TX ///
+>         KY MD OK TN WV AZ CO ID MT NV NM UT WY CA OR WA  {c -(}
+{txt}  2{com}. import excel "${c -(}input{c )-}`state'_county.xlsx", sheet("Sheet1") firstrow clear
+{txt}  3{com}. gen state = substr("`state'", 1, 2)
+{txt}  4{com}. drop ZipCode ZipCodeMap
+{txt}  5{com}. duplicates drop 
+{txt}  6{com}. rename (City County) (town county)
+{txt}  7{com}. drop if town == ""
+{txt}  8{com}. drop if county == ""
+{txt}  9{com}. save "${c -(}output{c )-}`state'_county", replace
+{txt} 10{com}. loc j = "~/Google Drive/Mass Media/Lily/Output/`state'_county"
+{txt} 11{com}. save "`j'", replace
+{txt} 12{com}. {c )-}
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(253 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/AL_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/AL_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(190 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/MA_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/MA_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(29 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/NH_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/NH_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(21 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/RI_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/RI_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(118 observations deleted)
+{res}{txt}(1 observation deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/VT_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/VT_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(41 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/DE_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/DE_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(21 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/RI_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/RI_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(118 observations deleted)
+{res}{txt}(1 observation deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/VT_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/VT_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(41 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/DE_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/DE_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(155 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/NJ_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/NJ_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(591 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/NY_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/NY_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(395 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/PA_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/PA_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(296 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/IL_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/IL_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(249 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/IN_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/IN_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(6 observations deleted)
+{res}{txt}(16 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/MI_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/MI_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(370 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/OH_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/OH_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(143 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/WI_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/WI_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(123 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/IA_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/IA_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(227 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/KS_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/KS_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(211 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/MN_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/MN_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(91 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/NE_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/NE_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(34 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/ND_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/ND_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(50 observations deleted)
+{res}{txt}(1 observation deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/SD_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/SD_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(508 observations deleted)
+{res}{txt}(1 observation deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/VA_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/VA_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(104 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/AR_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/AR_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(940 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/FL_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/FL_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(338 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/GA_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/GA_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(244 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/LA_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/LA_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(113 observations deleted)
+{res}{txt}(1 observation deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/MS_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/MS_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(326 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/NC_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/NC_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(156 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/SC_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/SC_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(1,193 observations deleted)
+{res}{txt}(1 observation deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/TX_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/TX_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(158 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/KY_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/KY_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(184 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/MD_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/MD_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(185 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/OK_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/OK_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(247 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/TN_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/TN_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(129 observations deleted)
+{res}{txt}(1 observation deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/WV_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/WV_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(255 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/AZ_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/AZ_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(248 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/CO_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/CO_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(59 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/ID_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/ID_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(45 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/MT_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/MT_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(151 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/NV_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/NV_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(80 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/NM_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/NM_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(118 observations deleted)
+{res}{txt}(1 observation deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/UT_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/UT_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(19 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/WY_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/WY_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(1,416 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/CA_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/CA_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(102 observations deleted)
+{res}{txt}(0 observations deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/OR_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/OR_county.dta saved
+{res}
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(262 observations deleted)
+{res}{txt}(1 observation deleted)
+(0 observations deleted)
+file ~/Google Drive/Mass Media/Lily/Output/WA_county.dta saved
+file ~/Google Drive/Mass Media/Lily/Output/WA_county.dta saved
+
+{com}. 
+. 
+. 
+. foreach state in AL MA NH RI VT DE RI VT DE NJ NY PA IL IN MI OH WI IA KS MN NE ND SD VA AR FL GA LA MS NC SC TX ///
+>         KY MD OK TN WV AZ CO ID MT NV NM UT WY CA OR WA CA OR CT ME MO {c -(}
+{txt}  2{com}. 
+. append using "~/Google Drive/Mass Media/Lily/Output/`state'_county"
+{txt}  3{com}. {c )-}
+{txt}{p 0 7 2}
+(note: variable
+county was 
+str12, now str14 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+town was 
+str24, now str26 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+county was 
+str14, now str17 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+county was 
+str17, now str21 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+town was 
+str26, now str27 to accommodate using data's values)
+{p_end}
+
+{com}. 
+. drop ipCode
+{txt}
+{com}. duplicates drop 
+
+{p 0 4}{txt}Duplicates in terms of {txt} all variables{p_end}
+
+(3,002 observations deleted)
+
+{com}. isid town county state
+{txt}
+{com}. 
+. duplicates tag town state, gen(dups)
+
+{p 0 4}{txt}Duplicates in terms of {res} town state{p_end}
+{txt}
+{com}. drop if dups > 0 // ~1% (figure out by hand) 
+{txt}(423 observations deleted)
+
+{com}. drop dups 
+{txt}
+{com}. isid town state 
+{txt}
+{com}. save "${c -(}output{c )-}town_county_crosswalk", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Output/town_county_crosswalk.dta saved
+
+{com}. 
+. unique state, detail
+{txt}Number of unique values of state is  {res}48
+{txt}Number of records is  {res}30259
+
+                      {txt}Records per state
+{hline 61}
+      Percentiles      Smallest
+ 1%    {res}       57             57
+{txt} 5%    {res}       97             70
+{txt}10%    {res}      176             97       {txt}Obs         {res}         48
+{txt}25%    {res}      363            169       {txt}Sum of Wgt. {res}         48
+
+{txt}50%    {res}      520                      {txt}Mean          {res} 630.3958
+                        {txt}Largest       Std. Dev.     {res} 414.9197
+{txt}75%    {res}    801.5           1451
+{txt}90%    {res}     1285           1505       {txt}Variance      {res} 172158.4
+{txt}95%    {res}     1505           1610       {txt}Skewness      {res} 1.030863
+{txt}99%    {res}     1796           1796       {txt}Kurtosis      {res}  3.49016
+{txt}
+{com}. assert r(N) == 48 
+{txt}
+{com}. 
+. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/2_county_town_crosswalk.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res} 5 Feb 2017, 17:22:25
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

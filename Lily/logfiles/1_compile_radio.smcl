@@ -1,0 +1,376 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/1_compile_radio.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 5 Feb 2017, 17:22:05
+{txt}
+{com}. 
+. global input "~/Google Drive/Mass Media/Lily/Data/Radio List: 1922-1931/"
+{txt}
+{com}. global output "~/Google Drive/Mass Media/Lily/Output/"
+{txt}
+{com}. 
+. 
+. cap program drop set_up 
+{txt}
+{com}. program set_up
+{txt}  1{com}.         replace A = "" in 3
+{txt}  2{com}.         replace A = "" in 1
+{txt}  3{com}.         drop if A == ""
+{txt}  4{com}.         gen frequency = regexs(0) if regexm(A, "[0-9][0-9[0-9]+") ==1 
+{txt}  5{com}.         replace frequency = "" if frequency != A
+{txt}  6{com}.         replace frequency = frequency[_n-1] if !missing(frequency[_n-1]) & missing(frequency) 
+{txt}  7{com}.         replace frequency = "" if frequency == A
+{txt}  8{com}.         drop if frequency == ""
+{txt}  9{com}.         destring frequency, replace
+{txt} 10{com}. 
+.         gen station = substr(A, 1, 4)
+{txt} 11{com}.         replace station = strrtrim(station) 
+{txt} 12{com}.         replace A = substr(A, 5, .)
+{txt} 13{com}.         gen state = regexs(0) if regexm(A, "[ ][A-Z][A-Z]") ==1 
+{txt} 14{com}. end 
+{txt}
+{com}. 
+. cap program drop town 
+{txt}
+{com}. program town
+{txt}  1{com}.         gen placement = strpos(A, state)
+{txt}  2{com}.         gen town = substr(A, 1, placement)
+{txt}  3{com}.         replace town = strrtrim(town)
+{txt}  4{com}.         drop A placement
+{txt}  5{com}. end
+{txt}
+{com}. ****************************************************************************
+. import excel "${c -(}input{c )-}radio_1922.xlsx", sheet("Sheet1") firstrow clear
+{res}{txt}
+{com}. rename (Call City State) (station town state)
+{res}{txt}
+{com}. gen frequency = 833 
+{txt}
+{com}. drop Licensee
+{txt}
+{com}. gen year = 1922
+{txt}
+{com}. save "${c -(}output{c )-}radio_1922.dta", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Output/radio_1922.dta saved
+
+{com}. 
+. import excel "${c -(}input{c )-}radio_1923.xlsx", sheet("Sheet1") clear
+{res}{txt}
+{com}. gen year = 1923
+{txt}
+{com}. set_up
+{txt}(1 real change made)
+(1 real change made)
+(123 observations deleted)
+(578 missing values generated)
+(3 real changes made)
+(581 real changes made)
+(58 real changes made)
+(58 observations deleted)
+frequency: all characters numeric; {res}replaced {txt}as {res}long
+{txt}(121 real changes made)
+(581 real changes made)
+(1 missing value generated)
+
+{com}. replace state = " ND" if state == "" 
+{txt}(1 real change made)
+
+{com}. town 
+{txt}(1 missing value generated)
+(580 real changes made)
+
+{com}. save "${c -(}output{c )-}radio_1923", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Output/radio_1923.dta saved
+
+{com}. 
+. import excel "${c -(}input{c )-}radio_1924.xlsx", sheet("Sheet1") clear
+{res}{txt}
+{com}. gen year = 1924
+{txt}
+{com}. set_up
+{txt}(1 real change made)
+(1 real change made)
+(133 observations deleted)
+(31 missing values generated)
+(513 real changes made)
+(544 real changes made)
+(65 real changes made)
+(65 observations deleted)
+frequency: all characters numeric; {res}replaced {txt}as {res}long
+{txt}(92 real changes made)
+(544 real changes made)
+
+{com}. town 
+{txt}(544 real changes made)
+
+{com}. save "${c -(}output{c )-}radio_1924", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Output/radio_1924.dta saved
+
+{com}. 
+. import excel "${c -(}input{c )-}radio_1925.xlsx", sheet("Sheet1") clear
+{res}{txt}
+{com}. gen year = 1925
+{txt}
+{com}. set_up
+{txt}(1 real change made)
+(1 real change made)
+(179 observations deleted)
+(23 missing values generated)
+(561 real changes made)
+(583 real changes made)
+(88 real changes made)
+(89 observations deleted)
+frequency: all characters numeric; {res}replaced {txt}as {res}long
+{txt}(80 real changes made)
+(583 real changes made)
+
+{com}. town 
+{txt}(583 real changes made)
+
+{com}. save "${c -(}output{c )-}radio_1925", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Output/radio_1925.dta saved
+
+{com}. 
+. import excel "${c -(}input{c )-}radio_1926.xlsx", sheet("Sheet1") clear
+{res}{txt}
+{com}. gen year = 1926
+{txt}
+{com}. drop if A == ""
+{txt}(1 observation deleted)
+
+{com}. gen frequency = regexs(0) if regexm(A, "[0-9][0-9[0-9]+") ==1 
+{txt}
+{com}. destring frequency, replace
+{txt}frequency: all characters numeric; {res}replaced {txt}as {res}int
+{txt}
+{com}. replace A = substr(A, 5,.)
+{txt}(536 real changes made)
+
+{com}. replace A = strrtrim(A) 
+{txt}(0 real changes made)
+
+{com}. gen station = substr(A, 1, 6)
+{txt}
+{com}. replace station = strrtrim(station) 
+{txt}(75 real changes made)
+
+{com}. replace A = substr(A, 7, .)
+{txt}(536 real changes made)
+
+{com}. gen state = regexs(0) if regexm(A, "[ ][A-Z][A-Z]") ==1 
+{txt}
+{com}. town
+{txt}(536 real changes made)
+
+{com}. save "${c -(}output{c )-}radio_1926", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Output/radio_1926.dta saved
+
+{com}. 
+. import excel "${c -(}input{c )-}radio_1927.xlsx", sheet("Sheet1") clear
+{res}{txt}
+{com}. gen year = 1927
+{txt}
+{com}. set_up
+{txt}(1 real change made)
+(1 real change made)
+(183 observations deleted)
+(6 missing values generated)
+(699 real changes made)
+(703 real changes made)
+(90 real changes made)
+(92 observations deleted)
+frequency: all characters numeric; {res}replaced {txt}as {res}int
+{txt}(83 real changes made)
+(703 real changes made)
+
+{com}. town 
+{txt}(703 real changes made)
+
+{com}. save "${c -(}output{c )-}radio_1927", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Output/radio_1927.dta saved
+
+{com}. 
+. import excel "${c -(}input{c )-}radio_1928.xlsx", sheet("Sheet1") clear
+{res}{txt}
+{com}. gen year = 1928
+{txt}
+{com}. set_up
+{txt}(1 real change made)
+(1 real change made)
+(191 observations deleted)
+(709 missing values generated)
+(1 real change made)
+(704 real changes made)
+(94 real changes made)
+(100 observations deleted)
+frequency: all characters numeric; {res}replaced {txt}as {res}long
+{txt}(88 real changes made)
+(704 real changes made)
+
+{com}. town
+{txt}(704 real changes made)
+
+{com}. save "${c -(}output{c )-}radio_1928", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Output/radio_1928.dta saved
+
+{com}. 
+. import excel "${c -(}input{c )-}radio_1929.xlsx", sheet("Sheet1") clear
+{res}{txt}
+{com}. gen year = 1929
+{txt}
+{com}. gen frequency = regexs(0) if regexm(A, "[0-9][0-9[0-9]+") ==1 
+{txt}(617 missing values generated)
+
+{com}. replace frequency = "" if frequency != A
+{txt}(0 real changes made)
+
+{com}. replace frequency = frequency[_n-1] if !missing(frequency[_n-1]) & missing(frequency) 
+{txt}(608 real changes made)
+
+{com}. replace frequency = "" if frequency == A
+{txt}(91 real changes made)
+
+{com}. drop if frequency == ""
+{txt}(100 observations deleted)
+
+{com}. destring frequency, replace
+{txt}frequency: all characters numeric; {res}replaced {txt}as {res}int
+{txt}
+{com}. drop if A == ""
+{txt}(1 observation deleted)
+
+{com}. gen station = substr(A, 1, 4)
+{txt}
+{com}. replace A = substr(A, 5,.)
+{txt}(607 real changes made)
+
+{com}. replace A = strrtrim(A)
+{txt}(0 real changes made)
+
+{com}. gen state = regexs(0) if regexm(A, "[ ][A-Z][A-Z]") ==1 
+{txt}
+{com}. town
+{txt}(607 real changes made)
+
+{com}. save "${c -(}output{c )-}radio_1929", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Output/radio_1929.dta saved
+
+{com}. 
+. import excel "${c -(}input{c )-}radio_1930.xlsx", sheet("Sheet1") clear
+{res}{txt}
+{com}. gen year = 1930
+{txt}
+{com}. set_up 
+{txt}(1 real change made)
+(1 real change made)
+(187 observations deleted)
+(637 missing values generated)
+(1 real change made)
+(632 real changes made)
+(92 real changes made)
+(98 observations deleted)
+frequency: all characters numeric; {res}replaced {txt}as {res}int
+{txt}(94 real changes made)
+(632 real changes made)
+
+{com}. town 
+{txt}(632 real changes made)
+
+{com}. save "${c -(}output{c )-}radio_1930", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Output/radio_1930.dta saved
+
+{com}. 
+. import excel "${c -(}input{c )-}radio_1931.xlsx", sheet("Sheet1") clear
+{res}{txt}
+{com}. gen year = 1931
+{txt}
+{com}. set_up 
+{txt}(1 real change made)
+(1 real change made)
+(185 observations deleted)
+(622 missing values generated)
+(1 real change made)
+(617 real changes made)
+(91 real changes made)
+(97 observations deleted)
+frequency: all characters numeric; {res}replaced {txt}as {res}int
+{txt}(91 real changes made)
+(617 real changes made)
+
+{com}. town 
+{txt}(617 real changes made)
+
+{com}. save "${c -(}output{c )-}radio_1931", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Output/radio_1931.dta saved
+
+{com}. **** Combine all files
+. forvalues i = 1922/1930 {c -(}
+{txt}  2{com}.         append using "${c -(}output{c )-}radio_`i'"
+{txt}  3{com}. {c )-}
+{txt}{p 0 7 2}
+(note: variable
+frequency was 
+int, now float to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+frequency was 
+float, now double to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+town was 
+str19, now str24 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+station was 
+str4, now str6 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+town was 
+str24, now str30 to accommodate using data's values)
+{p_end}
+
+{com}. 
+. replace town = regexr(town, ",", "") 
+{txt}(606 real changes made)
+
+{com}. replace town = strrtrim(town)
+{txt}(0 real changes made)
+
+{com}. foreach var in state town{c -(} 
+{txt}  2{com}. replace `var' = trim(`var')
+{txt}  3{com}. {c )-}
+{txt}(5,507 real changes made)
+(4,765 real changes made)
+
+{com}. drop if state == "AK" // state not create yet
+{txt}(23 observations deleted)
+
+{com}. drop if state == "HI" // state not create yet
+{txt}(20 observations deleted)
+
+{com}. drop if state == "PI" // state not create yet
+{txt}(22 observations deleted)
+
+{com}. 
+. replace state = "MO" if town == "Joplin"
+{txt}(1 real change made)
+
+{com}. save "${c -(}output{c )-}radio_compile", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Output/radio_compile.dta saved
+
+{com}. 
+. 
+. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/1_compile_radio.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res} 5 Feb 2017, 17:22:06
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

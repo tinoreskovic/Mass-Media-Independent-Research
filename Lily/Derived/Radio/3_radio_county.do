@@ -1,7 +1,11 @@
 ***** Program 3: Merge county to radio data *****
-global output "\Users\lshoffma\Google Drive\Mass Media\Lily\Output\"
-global temp "\Users\lshoffma\Google Drive\Mass Media\Lily\Temp\"
-global input "\Users\lshoffma\Google Drive\Mass Media\Lily\Data\"
+clear all
+log using  "/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/3_radio_county", replace
+
+
+global output "~/Google Drive/Mass Media/Lily/Output/"
+global temp "~/Google Drive/Mass Media/Lily/Temp/"
+global input "~/Google Drive/Mass Media/Lily/Data/"
 
 
 use "${output}town_county_crosswalk", clear
@@ -58,4 +62,5 @@ replace state = "NV" if town == "Reno"
 *****************************************************************************
 drop _merge
 save "${output}county_radio_compile", replace
+log close
 **********************************************

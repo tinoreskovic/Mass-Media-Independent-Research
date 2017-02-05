@@ -1,11 +1,11 @@
 ** Program 1: Compiles radio station lists into .dta file *** 
-
 clear all
-global input "~\Google Drive\Mass Media\Lily\Data\Radio List: 1922-1931\"
-global output "~/Google Drive/Mass Media/Lily/Output/"
-global github "~/Mass-Media-Independent-Research/Lily/"
 
-log 
+log using  "/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/1_compile_radio", replace
+
+global input "~/Google Drive/Mass Media/Lily/Data/Radio List: 1922-1931/"
+global output "~/Google Drive/Mass Media/Lily/Output/"
+
 
 cap program drop set_up 
 program set_up
@@ -130,7 +130,7 @@ replace state = "MO" if town == "Joplin"
 save "${output}radio_compile", replace
 
 
-
+log close
 
 
 

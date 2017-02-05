@@ -1,7 +1,11 @@
 **** Program 4: Merge Voting Data to Radio-County-DMA data **** 
-global input "\Users\lshoffma\Google Drive\Mass Media\Lily\Data\"
-global output "\Users\lshoffma\Google Drive\Mass Media\Lily\Output\"
-global temp "\Users\lshoffma\Google Drive\Mass Media\Lily\Temp\"
+clear all 
+
+log using  "/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/4_voting_county_radio", replace
+
+global input "~/Google Drive/Mass Media/Lily/Data/"
+global output "~/Google Drive/Mass Media/Lily/Output/"
+global temp "~/Google Drive/Mass Media/Lily/Temp/"
 
 use "${input}voting", clear
 rename V2 county
@@ -89,4 +93,6 @@ merge m:1 state_code county using "${input}family_census_1930", keepusing(county
 
 gen fraction_radio_fam = radiorep/famtot
 save "${output}merged_radio_voting", replace
+
+log close
 

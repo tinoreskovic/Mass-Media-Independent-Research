@@ -1,6 +1,8 @@
 clear all
-** Program 5: makes scatter plots
-global output "\Users\lshoffma\Google Drive\Mass Media\Lily\Output\"
+** Program 5: makes scatter plots and save in github 
+log using  "/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/5_scatter_plot", replace
+cd "~/Google Drive/Mass Media/Lily/Output/"
+global output "~/Google Drive/Mass Media/Lily/Output/"
 
 use "${output}merged_radio_voting", clear
 ** clean by outcome (voting) 
@@ -69,15 +71,15 @@ drop if missing(year)
 isid state year county
 collapse (sum) total_station, by(year)
 sort year
-scatter total_station year, mlabel(total_station) ytitle("Total Stations") title("Total Broadcasting Stations by Year") connect(l) subtitle("Yearly Measurement: June 30th") saving("${output}scatter_total_stations.jpg", replace)
+scatter total_station year, mlabel(total_station) ytitle("Total Stations") title("Total Broadcasting Stations by Year") connect(l) subtitle("Yearly Measurement: June 30th") saving("/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/total_stations", replace)
 restore 
 
 drop total_station year total_dma min_freq_dma
 duplicates drop 
 isid state county
 
-hist first_dma, frequency ytitle("Total Counties") title("Year of First Broadcasting Station") xtitle("Year") subtitle("By DMA") saving("${output}hist_dma.jpg", replace)
-hist first_county, frequency ytitle("Total Counties") title("Year of First Broadcasting Station") xtitle("Year") subtitle("By County") saving("${output}hist_county.jpg", replace)
+hist first_dma, frequency ytitle("Total Counties") title("Year of First Broadcasting Station") xtitle("Year") subtitle("By DMA") saving("/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/hist_dma", replace)
+hist first_county, frequency ytitle("Total Counties") title("Year of First Broadcasting Station") xtitle("Year") subtitle("By County") saving("/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/hist_county", replace)
 
 ** Table of mean by first year
 
@@ -87,7 +89,9 @@ collapse (sum) radiorep famtot, by(first_dma)
 sort first_dma
 gen percent_radio = radiorep/famtot
 twoway scatter percent_radio first_dma, ysc(range(0 .5)) ylabel(0(.1).5) ytitle("Families Radio Ownership") xtitle("First Year Broadcasting in DMA") ///
- title("Family Radio Ownership by DMA First Broadcasting Year") subtitle("1930 Census") saving("${output}radio_ownership.jpg", replace)
+ title("Family Radio Ownership by DMA First Broadcasting Year") subtitle("1930 Census") saving("/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/radio_ownership", replace)
 restore
 
 save "${ouput}panel_data", replace
+
+log close

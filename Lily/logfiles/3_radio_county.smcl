@@ -1,0 +1,198 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/3_radio_county.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 5 Feb 2017, 17:23:52
+{txt}
+{com}. 
+. 
+. global output "~/Google Drive/Mass Media/Lily/Output/"
+{txt}
+{com}. global temp "~/Google Drive/Mass Media/Lily/Temp/"
+{txt}
+{com}. global input "~/Google Drive/Mass Media/Lily/Data/"
+{txt}
+{com}. 
+. 
+. use "${c -(}output{c )-}town_county_crosswalk", clear
+{txt}
+{com}. 
+. merge 1:m town state using "${c -(}output{c )-}radio_compile", keep(2 3)
+{res}{txt}{p 0 7 2}
+(note: variable
+state was 
+str2, now str3 to accommodate using data's values)
+{p_end}
+{p 0 7 2}
+(note: variable
+town was 
+str27, now str30 to accommodate using data's values)
+{p_end}
+
+{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}           1,527
+{txt}{col 9}from master{col 30}{res}               0{txt}  (_merge==1)
+{col 9}from using{col 30}{res}           1,527{txt}  (_merge==2)
+
+{col 5}matched{col 30}{res}           4,293{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. preserve
+{txt}
+{com}. keep if _merge == 3
+{txt}(1,527 observations deleted)
+
+{com}. save "${c -(}temp{c )-}merged_county", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Temp/merged_county.dta saved
+
+{com}. assert county != ""
+{txt}
+{com}. restore
+{txt}
+{com}. 
+. keep if _merge == 2  
+{txt}(4,293 observations deleted)
+
+{com}. drop _merge
+{txt}
+{com}. drop if missing(town)
+{txt}(1 observation deleted)
+
+{com}. drop county
+{txt}
+{com}. merge m:1 town state using "${c -(}input{c )-}unmatched"
+{res}
+{txt}{col 5}Result{col 38}# of obs.
+{col 5}{hline 41}
+{col 5}not matched{col 30}{res}              19
+{txt}{col 9}from master{col 30}{res}              19{txt}  (_merge==1)
+{col 9}from using{col 30}{res}               0{txt}  (_merge==2)
+
+{col 5}matched{col 30}{res}           1,507{txt}  (_merge==3)
+{col 5}{hline 41}
+
+{com}. drop if _merge ==1
+{txt}(19 observations deleted)
+
+{com}. drop _merge 
+{txt}
+{com}. append using "${c -(}temp{c )-}merged_county"
+{txt}{p 0 7 2}
+(note: variable
+county was 
+str14, now str21 to accommodate using data's values)
+{p_end}
+(label _merge already defined)
+
+{com}. drop if county == "" // 13 observations 
+{txt}(13 observations deleted)
+
+{com}. replace county = lower(county) 
+{txt}(5,787 real changes made)
+
+{com}. 
+. ** by hand: correct counties for crosswalk ** 
+. replace county = "orange" if county == "santa ana"
+{txt}(1 real change made)
+
+{com}. replace county = "dade" if county == "miami-dade"
+{txt}(23 real changes made)
+
+{com}. replace county = "de kalb" if county == "dekalb"
+{txt}(1 real change made)
+
+{com}. replace county = "du page" if county == "dupage"
+{txt}(10 real changes made)
+
+{com}. replace county = "du page" if county == "dupage"
+{txt}(0 real changes made)
+
+{com}. replace county = "la salle" if county == "lasalle"
+{txt}(7 real changes made)
+
+{com}. replace county = "la porte" if county == "laporte"
+{txt}(7 real changes made)
+
+{com}. replace county = "miami/lykins" if county == "miami"
+{txt}(2 real changes made)
+
+{com}. replace county = "caddo" if county == "caddo parish"
+{txt}(1 real change made)
+
+{com}. replace county = "st clair" if county == "saint clair"
+{txt}(3 real changes made)
+
+{com}. replace county = "kittson/pembina" if (county == "kittson" & state == "MN")
+{txt}(3 real changes made)
+
+{com}. replace county = "st louis" if (county == "st. louis" & state == "MO")
+{txt}(1 real change made)
+
+{com}. replace county = "st louis" if (county == "saint louis" & state == "MN")
+{txt}(3 real changes made)
+
+{com}. replace county = "wilkin/toombs" if (county == "wilkin" & state == "MN")
+{txt}(1 real change made)
+
+{com}. replace county = "arlington/alexand" if (county == "arlington" & state == "VA")
+{txt}(6 real changes made)
+
+{com}. replace county = "hampton" if (county == "hampton city" & state == "VA")
+{txt}(2 real changes made)
+
+{com}. replace county = "lynchburg" if (county == "lynchburg city" & state == "VA")
+{txt}(2 real changes made)
+
+{com}. replace county = "newport news" if (county == "newport news city" & state == "VA")
+{txt}(3 real changes made)
+
+{com}. replace county = "portsmouth" if (county == "portsmouth city" & state == "VA")
+{txt}(2 real changes made)
+
+{com}. replace county = "virginia beach" if (county == "virginia beach city" & state == "VA")
+{txt}(1 real change made)
+
+{com}. replace county = "johnson/johnston" if (county == "johnson" & state == "NE")
+{txt}(2 real changes made)
+
+{com}. replace county = "la crosse" if (county == "crosse" & state == "WI")
+{txt}(5 real changes made)
+
+{com}. replace county = "stephens/buchanan" if (county == "stephens" & state == "TX")
+{txt}(1 real change made)
+
+{com}. replace county = "orange/mosquito" if (county == "orange" & state == "FL")
+{txt}(9 real changes made)
+
+{com}. replace county = "calhoun/benton" if (county == "calhoun" & state == "AL")
+{txt}(1 real change made)
+
+{com}. replace county = "kings" if (county == "brooklyn" & state == "NY")
+{txt}(3 real changes made)
+
+{com}. drop if county == "washington" & state == "DC"
+{txt}(47 observations deleted)
+
+{com}. replace county = "dinwiddie" if (county == "huntingdon " & state == "VA")
+{txt}(3 real changes made)
+
+{com}. replace state = "NV" if town == "Reno"
+{txt}(1 real change made)
+
+{com}. 
+. *****************************************************************************
+. drop _merge
+{txt}
+{com}. save "${c -(}output{c )-}county_radio_compile", replace
+{txt}file ~/Google Drive/Mass Media/Lily/Output/county_radio_compile.dta saved
+
+{com}. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/3_radio_county.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res} 5 Feb 2017, 17:23:52
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}
