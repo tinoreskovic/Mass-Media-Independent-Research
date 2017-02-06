@@ -1,3 +1,5 @@
+This looks good to me. I don't think there's anything that doesn't make sense.
+
 clear
 use "/Users/tinoreskovic/Desktop/research media/raw data.dta"
 log using "/Users/tinoreskovic/Desktop/research media/analysis_log.log", replace
