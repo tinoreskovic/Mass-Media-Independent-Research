@@ -62,3 +62,24 @@ twoway (scatter twestimate logvalue) (lfit twestimate logvalue)
 twoway (scatter logvalue logmentions if valuegroup20) (lfitci logvalue logmentions if valuegroup20)
 reg secondary primary logmentions if valuegroup20
 twoway (scatter value mentionseng3 if valuegroup20) (lfitci value mentionseng3 if valuegroup20)
+//smaller than 10, 20; larger than 5, 10, 15, 20
+reg value mentionseng3 primary i.pos i.transfer_year transfer_age  if valuegroupfirst10 
+rvfplot
+predict first10inestimate, xb
+predict first10inresiduals, r
+twoway (scatter first10inestimate value) (lfit first10inestimate value)
+twoway (scatter value mentionseng3) (lfitci value mentionseng3)
+reg secondary primary mentionseng3 if valuegroupfirst10
+//smaller than 20
+reg value mentionseng3 primary i.pos i.transfer_year transfer_age  if valuegroupfirst20 
+rvfplot
+predict first20inestimate, xb
+predict first20inresiduals, r
+twoway (scatter first20inestimate value) (lfit first20inestimate value)
+twoway (scatter value mentionseng3) (lfitci value mentionseng3)
+reg secondary primary mentionseng3 if valuegroupfirst20
+<<<<<<< Updated upstream
+=======
+reg secondary primary mentionseng3 if valuegroup20
+
+>>>>>>> Stashed changes
