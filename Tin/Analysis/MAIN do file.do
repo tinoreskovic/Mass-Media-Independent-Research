@@ -1,5 +1,6 @@
 clear
 use "/Users/tinoreskovic/Desktop/research media/raw data.dta"
+log using "/Users/tinoreskovic/Desktop/research media/analysis_log.log", replace
 //PART 1: guardian, independent, telegraph:
 reg logvalue logmentions primary i.pos i.transfer_year transfer_age games
 rvfplot

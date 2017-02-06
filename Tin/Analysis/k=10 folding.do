@@ -1,5 +1,6 @@
 clear
 use "/Users/tinoreskovic/Desktop/research media/raw data.dta"
+log using "/Users/tinoreskovic/Desktop/research media/folding_analysis_log.log", replace
 //10 random groups: 2-folding
 set seed 123456789
 generate rannum = uniform()
