@@ -5,6 +5,7 @@ log using  "/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/lo
 
 global input "~/Google Drive/Mass Media/Lily/Data/"
 global temp "~/Google Drive/Mass Media/Lily/Temp/"
+global output "~/Google Drive/Mass Media/Lily/Output/"
 
 
 *** reshape for analysis 
@@ -49,7 +50,6 @@ label var turnout "Overall Turnout"
 
 save "${output}analysis", replace
 
-
 replace turnout = turnout/100
 
  merge m:1 county state using "${input}census_part1", keep(1 3) nogen keepusing(area urb930 totpop density area tillit10 totunemp whtot)
@@ -61,13 +61,41 @@ replace turnout = turnout/100
 label var log_pop "Log Population" 
 
 preserve
+keep famtot totpop year dma_ind county state
+duplicates drop
+isid year county state
+bys year: egen total_pop  = sum(totpop)
+qui sum total_pop
+assert r(min) == r(max) 
+loc j= r(min)
 collapse (sum) famtot totpop, by(year dma_ind)
-sort year
+keep if dma_ind == 1
 keep if year >= 1920 & year <= 1930
-replace totpop = totpop/1000000
-twoway (scatter totpop year if dma_ind == 1) (scatter totpop year if dma_ind == 0), ytitle("Population Total (Millions)") ///
-legend(order(1 "Broadcasting" 2 "No Broadcasting")) title("Same DMA Broadcasting Available to 1930 Population") saving("/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/scatter_population_access", replace)
+gen percentage_broad = totpop/`j'*100
+sort year
+loc i = round(`j'/1000000)
+scatter  percentage_broad year, title("Same DMA Broadcasting") subtitle("Total Population `i' Million") ytitle("Percentage of Population") connect(l) ysc(range(0 100)) ylabel(0(10)100) ///
+title("Same DMA Broadcasting Available to 1930 Population") saving("/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/scatter_population_access", replace) 
 restore
+
+preserve
+keep famtot totpop year county_ind county state
+duplicates drop
+isid year county state
+bys year: egen total_pop  = sum(totpop)
+qui sum total_pop
+assert r(min) == r(max) 
+loc j= r(min)
+collapse (sum) famtot totpop, by(year county_ind)
+keep if county_ind == 1
+keep if year >= 1920 & year <= 1930
+gen percentage_broad = totpop/`j'*100
+sort year
+loc i = round(`j'/1000000)
+scatter  percentage_broad year, title("Same County Broadcasting") subtitle("Total Population `i' Million") ytitle("Percentage of Population") connect(l) ysc(range(0 100)) ylabel(0(10)100) ///
+title("Same County Broadcasting Available to 1930 Population") saving("/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/scatter_population_county_access", replace) 
+restore
+
 
  ** Include absolute percentage differences between replubican and democrat percentages
  gen percent_rep = Republican/overall
