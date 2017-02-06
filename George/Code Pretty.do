@@ -1,3 +1,10 @@
+**LILY comments: There should be an input here: so:  use filename; is this a dataset in the google drive? 
+** 2) to shorten code, you can abbreviate variable names with *, so pct_15_to_19 pct_20_to_24 pct_25_to_29 pct_30_to_34 can all
+** be represented by pct*
+** 3) You should be saving your plots and regressions results here to a github folder. 
+** For example: twoway (scatter enc_viol month) saving("~/Mass-Media-Independent-Research/George/plots/name_plot", replace)
+
+
 twoway (scatter enc_viol month)
 
 total enc_viol, over(month)
