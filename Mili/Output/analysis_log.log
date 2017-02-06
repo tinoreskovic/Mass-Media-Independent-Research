@@ -1,0 +1,456 @@
+-----------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/milisanwalka/Desktop/MassMedia_Mili/analysis_log.log
+  log type:  text
+ opened on:   6 Feb 2017, 13:48:03
+
+. 
+. 
+. //generation of variable logs
+. gen logdeaths = ln(totaldeaths)
+(4 missing values generated)
+
+. replace logdeaths=0 if logdeaths==.
+(4 real changes made)
+
+. 
+. gen logcoverage = ln(coverage)
+(6 missing values generated)
+
+. replace logcoverage=0 if logcoverage==.
+(6 real changes made)
+
+. 
+. gen logratio1 = ln(ratio1)
+(25 missing values generated)
+
+. replace logratio1 = -4.7 if logratio1==.
+(25 real changes made)
+
+. 
+. encode disastertype, generate(distype)
+
+. 
+. gen logaffected = ln(totalaffected)
+(1 missing value generated)
+
+. replace logaffected=0 if logaffected==.
+(1 real change made)
+
+. 
+. 
+. //relationship between #affected and #deaths
+. twoway (scatter logaffected logdeaths) (lfit logaffected logdeaths), by(distype)
+(note:  regress could not fit model)
+insufficient observations
+
+. 
+. 
+. //relationship between #affected and #deaths without disasters where #affected data was missing so 
+> replaced by #deaths
+. twoway (scatter logaffected logdeaths) (lfit logaffected logdeaths) if logaffected!=logdeaths, by(d
+> istype)
+
+. 
+. //see relationship between disaster type and urban/rural classification
+. tab urbanlocation distype
+
+urbanlocat |                           DisasterType
+       ion | Earthquak  Extreme T      Flood  Landslide  Mass move      Storm |     Total
+-----------+------------------------------------------------------------------+----------
+         0 |         3          1         31          4          1         17 |        57 
+         1 |         3         10         20          1          0         12 |        46 
+-----------+------------------------------------------------------------------+----------
+     Total |         6         11         51          5          1         29 |       103 
+
+
+. 
+. 
+. //see relationship between coverage and disaster intensity by urban/rural
+. sort urbanlocation
+
+. graph twoway (scatter logcoverage logdeaths if urbanlocation==0) (scatter logcoverage logdeaths if 
+> urbanlocation==1) (lfit logcoverage logdeaths if urbanlocation==0) (lfit logcoverage logdeaths if u
+> rbanlocation==1), legend(label(1 'Log(Coverage for Rural)') label(2 'Log(Coverage for Urban)')) 
+
+. 
+. 
+. //see relationship between reader interest and disaster intensity by disastertype
+. graph twoway (scatter logratio1 logdeaths) (lfit logratio1 logdeaths), by(distype)
+(note:  regress could not fit model)
+insufficient observations
+
+. 
+. regress logcoverage logratio1 logdeaths urbanlocation
+
+      Source |       SS           df       MS      Number of obs   =       103
+-------------+----------------------------------   F(3, 99)        =     48.28
+       Model |  141.851027         3  47.2836757   Prob > F        =    0.0000
+    Residual |  96.9637612        99  .979431931   R-squared       =    0.5940
+-------------+----------------------------------   Adj R-squared   =    0.5817
+       Total |  238.814788       102  2.34132146   Root MSE        =    .98966
+
+-------------------------------------------------------------------------------
+  logcoverage |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+    logratio1 |   .4741381   .0612672     7.74   0.000     .3525707    .5957054
+    logdeaths |   .3591034   .0702962     5.11   0.000     .2196205    .4985864
+urbanlocation |   .7000672   .2064041     3.39   0.001     .2905166    1.109618
+        _cons |   2.845841   .3506062     8.12   0.000     2.150162    3.541519
+-------------------------------------------------------------------------------
+
+. 
+. regress logcoverage logratio1 logdeaths urbanlocation logaffected if totaldeaths!=totalaffected
+
+      Source |       SS           df       MS      Number of obs   =        60
+-------------+----------------------------------   F(4, 55)        =     21.03
+       Model |  77.4753847         4  19.3688462   Prob > F        =    0.0000
+    Residual |  50.6471378        55  .920857051   R-squared       =    0.6047
+-------------+----------------------------------   Adj R-squared   =    0.5759
+       Total |  128.122522        59  2.17156818   Root MSE        =    .95961
+
+-------------------------------------------------------------------------------
+  logcoverage |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+    logratio1 |   .4347656   .0810831     5.36   0.000     .2722715    .5972596
+    logdeaths |   .2963635   .0926911     3.20   0.002     .1106063    .4821206
+urbanlocation |   .6187705   .2643695     2.34   0.023     .0889621    1.148579
+  logaffected |   .0336457   .0422792     0.80   0.430    -.0510836    .1183751
+        _cons |   2.574617   .5630315     4.57   0.000     1.446277    3.702958
+-------------------------------------------------------------------------------
+
+. 
+. regress logcoverage logratio1 logdeaths urbanlocation i.distype i.year
+
+      Source |       SS           df       MS      Number of obs   =       103
+-------------+----------------------------------   F(14, 88)       =     12.25
+       Model |  157.849471        14  11.2749622   Prob > F        =    0.0000
+    Residual |  80.9653172        88  .920060423   R-squared       =    0.6610
+-------------+----------------------------------   Adj R-squared   =    0.6070
+       Total |  238.814788       102  2.34132146   Root MSE        =     .9592
+
+--------------------------------------------------------------------------------------
+         logcoverage |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------+----------------------------------------------------------------
+           logratio1 |   .5494066   .0771347     7.12   0.000     .3961176    .7026957
+           logdeaths |   .2777334   .0758704     3.66   0.000     .1269568    .4285099
+       urbanlocation |    .577992   .2191586     2.64   0.010     .1424604    1.013524
+                     |
+             distype |
+Extreme Temperature  |   1.166482   .6246809     1.87   0.065    -.0749397    2.407905
+              Flood  |   .4153052   .4909977     0.85   0.400    -.5604495     1.39106
+          Landslide  |   .5601263   .6303997     0.89   0.377    -.6926607    1.812913
+Mass movement (dry)  |   .7997944    1.12788     0.71   0.480     -1.44163    3.041218
+              Storm  |   .3242869   .5439915     0.60   0.553    -.7567818    1.405356
+                     |
+                year |
+               2011  |   .1400627   .3654692     0.38   0.702    -.5862305    .8663559
+               2012  |  -.1233107   .4054543    -0.30   0.762     -.929066    .6824445
+               2013  |   1.020684   .3751013     2.72   0.008      .275249    1.766119
+               2014  |  -.0244578   .3426681    -0.07   0.943    -.7054387    .6565231
+               2015  |  -.0382146   .3213944    -0.12   0.906    -.6769185    .6004894
+               2016  |   .4858374   .3554646     1.37   0.175    -.2205738    1.192249
+                     |
+               _cons |   2.782587   .5164315     5.39   0.000     1.756288    3.808886
+--------------------------------------------------------------------------------------
+
+. predict residual, r
+
+. predict coverageestimate, xb
+
+. 
+. sort urbanlocation
+
+. 
+. twoway (histogram residual if urbanlocation==1, color(green)) (histogram residual if urbanlocation=
+> =0, fcolor(none) lcolor(black)), legend(order(1 "Urban" 2 "Rural" ))
+
+. 
+. 
+. separate residual, by(urbanlocation)
+
+              storage   display    value
+variable name   type    format     label      variable label
+-----------------------------------------------------------------------------------------------------
+residual0       float   %9.0g                 residual, urbanlocation == 0
+residual1       float   %9.0g                 residual, urbanlocation == 1
+
+. 
+. twoway (scatter residual0 coverageestimate) (scatter residual1 coverageestimate)
+
+. 
+. 
+. twoway (scatter coverageestimate logcoverage) (lfit coverageestimate logcoverage)
+
+. 
+. //northeast analysis
+. 
+. regress logcoverage logratio1 logdeaths northeastlocation
+
+      Source |       SS           df       MS      Number of obs   =       103
+-------------+----------------------------------   F(3, 99)        =     39.82
+       Model |  130.589798         3  43.5299326   Prob > F        =    0.0000
+    Residual |  108.224991        99  1.09318172   R-squared       =    0.5468
+-------------+----------------------------------   Adj R-squared   =    0.5331
+       Total |  238.814788       102  2.34132146   Root MSE        =    1.0456
+
+-----------------------------------------------------------------------------------
+      logcoverage |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------+----------------------------------------------------------------
+        logratio1 |   .5012122    .065103     7.70   0.000     .3720337    .6303908
+        logdeaths |   .4205972   .0718666     5.85   0.000     .2779984     .563196
+northeastlocation |  -.0116551    .157369    -0.07   0.941    -.3239093    .3005991
+            _cons |   3.026939   .3808409     7.95   0.000     2.271268     3.78261
+-----------------------------------------------------------------------------------
+
+. 
+. regress logcoverage logratio1 logdeaths northeastlocation urbanlocation
+
+      Source |       SS           df       MS      Number of obs   =       103
+-------------+----------------------------------   F(4, 98)        =     35.84
+       Model |  141.851717         4  35.4629293   Prob > F        =    0.0000
+    Residual |  96.9630713        98  .989419095   R-squared       =    0.5940
+-------------+----------------------------------   Adj R-squared   =    0.5774
+       Total |  238.814788       102  2.34132146   Root MSE        =     .9947
+
+-----------------------------------------------------------------------------------
+      logcoverage |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+------------------+----------------------------------------------------------------
+        logratio1 |   .4744115   .0624436     7.60   0.000     .3504941    .5983289
+        logdeaths |   .3589979   .0707668     5.07   0.000     .2185635    .4994322
+northeastlocation |  -.0039537   .1497316    -0.03   0.979    -.3010913    .2931838
+    urbanlocation |   .6999836   .2074779     3.37   0.001     .2882505    1.111717
+            _cons |   2.848467   .3661575     7.78   0.000      2.12184    3.575095
+-----------------------------------------------------------------------------------
+
+. 
+. 
+. 
+. 
+end of do-file
+
+. graph save Graph "/Users/milisanwalka/Desktop/MassMedia_Mili/Actual vs fitted values.gph"
+(file /Users/milisanwalka/Desktop/MassMedia_Mili/Actual vs fitted values.gph saved)
+
+. twoway (scatter logaffected logdeaths) (lfit logaffected logdeaths), by(distype)
+(note:  regress could not fit model)
+insufficient observations
+
+. graph save Graph "/Users/milisanwalka/Desktop/MassMedia_Mili/Affected vs death by distype.gph"
+(file /Users/milisanwalka/Desktop/MassMedia_Mili/Affected vs death by distype.gph saved)
+
+. twoway (scatter logaffected logdeaths) (lfit logaffected logdeaths) if logaffected!=logdeaths, by(d
+> istype)
+
+. graph save Graph "/Users/milisanwalka/Desktop/MassMedia_Mili/affected vs death (minus disasters wit
+> hout affected data).gph"
+(file /Users/milisanwalka/Desktop/MassMedia_Mili/affected vs death (minus disasters without affected 
+> data).gph saved)
+
+. sort urbanlocation
+
+. graph twoway (scatter logcoverage logdeaths if urbanlocation==0) (scatter logcoverage logdeaths if 
+> urbanlocation==1) (lfit logcoverage logdeaths if urbanlocation==0) (lfit logcoverage logdeaths if u
+> rbanlocation==1), legend(label(1 'Log(Coverage for Rural)') label(2 'Log(Coverage for Urban)')) 
+
+. 
+. 
+. graph save Graph "/Users/milisanwalka/Desktop/MassMedia_Mili/urban vs rural difference in covereage
+> .gph"
+(file /Users/milisanwalka/Desktop/MassMedia_Mili/urban vs rural difference in covereage.gph saved)
+
+. graph twoway (scatter logratio1 logdeaths) (lfit logratio1 logdeaths), by(distype)
+(note:  regress could not fit model)
+insufficient observations
+
+. graph save Graph "/Users/milisanwalka/Desktop/MassMedia_Mili/Interest vs. death by distype.gph"
+(file /Users/milisanwalka/Desktop/MassMedia_Mili/Interest vs. death by distype.gph saved)
+
+. regress logcoverage logratio1 logdeaths urbanlocation i.distype i.year
+
+      Source |       SS           df       MS      Number of obs   =       103
+-------------+----------------------------------   F(14, 88)       =     12.25
+       Model |  157.849471        14  11.2749622   Prob > F        =    0.0000
+    Residual |  80.9653172        88  .920060423   R-squared       =    0.6610
+-------------+----------------------------------   Adj R-squared   =    0.6070
+       Total |  238.814788       102  2.34132146   Root MSE        =     .9592
+
+--------------------------------------------------------------------------------------
+         logcoverage |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+---------------------+----------------------------------------------------------------
+           logratio1 |   .5494066   .0771347     7.12   0.000     .3961176    .7026957
+           logdeaths |   .2777334   .0758704     3.66   0.000     .1269568    .4285099
+       urbanlocation |    .577992   .2191586     2.64   0.010     .1424604    1.013524
+                     |
+             distype |
+Extreme Temperature  |   1.166482   .6246809     1.87   0.065    -.0749397    2.407905
+              Flood  |   .4153052   .4909977     0.85   0.400    -.5604495     1.39106
+          Landslide  |   .5601263   .6303997     0.89   0.377    -.6926607    1.812913
+Mass movement (dry)  |   .7997944    1.12788     0.71   0.480     -1.44163    3.041218
+              Storm  |   .3242869   .5439915     0.60   0.553    -.7567818    1.405356
+                     |
+                year |
+               2011  |   .1400627   .3654692     0.38   0.702    -.5862305    .8663559
+               2012  |  -.1233107   .4054543    -0.30   0.762     -.929066    .6824445
+               2013  |   1.020684   .3751013     2.72   0.008      .275249    1.766119
+               2014  |  -.0244578   .3426681    -0.07   0.943    -.7054387    .6565231
+               2015  |  -.0382146   .3213944    -0.12   0.906    -.6769185    .6004894
+               2016  |   .4858374   .3554646     1.37   0.175    -.2205738    1.192249
+                     |
+               _cons |   2.782587   .5164315     5.39   0.000     1.756288    3.808886
+--------------------------------------------------------------------------------------
+
+. predict residual, r
+variable residual already defined
+r(110);
+
+. predict coverageestimate, xb
+variable coverageestimate already defined
+r(110);
+
+. 
+. sort urbanlocation
+
+. 
+. twoway (histogram residual if urbanlocation==1, color(green)) (histogram residual if urbanlocation=
+> =0, fcolor(none) lcolor(black)), legend(order(1 "Urban" 2 "Rural" ))
+
+. 
+. graph save Graph "/Users/milisanwalka/Desktop/MassMedia_Mili/residuals plot by urban:rural.gph"
+(file /Users/milisanwalka/Desktop/MassMedia_Mili/residuals plot by urban:rural.gph saved)
+
+. separate residual, by(urbanlocation)
+variable residual0 already defined
+r(110);
+
+. 
+. twoway (scatter residual0 coverageestimate) (scatter residual1 coverageestimate)
+
+. 
+. graph save Graph "/Users/milisanwalka/Desktop/MassMedia_Mili/residuals uncoorelated .gph"
+(file /Users/milisanwalka/Desktop/MassMedia_Mili/residuals uncoorelated .gph saved)
+
+. twoway (scatter coverageestimate logcoverage) (lfit coverageestimate logcoverage)
+
+. clear
+
+. use "/Users/milisanwalka/Desktop/MassMedia_Mili/rawdata.dta"
+
+. do "/Users/milisanwalka/Desktop/MassMedia_Mili/raw data.do"
+
+. /*
+> 
+> 1. Disaster data 
+> Source: http://www.emdat.be/database
+> Route: HomePage-->Disaster List --> Select following filters:
+> Filters: Period from 2010:2016, Country: India, DisasterType: [Biological Climatological Geophysica
+> l Hydrological Metereological], Total Deaths, Total Affacted] 
+> 
+> This enabled the direct creation of following variables: startdate, endate, country, location, disa
+> stertype, disastersubtype, totaldeaths, totalaffected
+> 
+> Additional Variables generate in excel using basic functions:
+>         (i) Year = year(startdate)
+> 
+>         (ii) enddatenews = enddate+10 [This suggests the end of the news search period, assumtion: 
+> disaster reporting reduces to negligible 10 days after disaster ends]
+> 
+>         
+>         Location specific: 
+> 
+>                 (iii) onlystateslocation = 1 if location is specified just in terms of states; else
+>  0
+> 
+>                 (iv) 3statesormorelocation = 1 if location description includes more than 3 states
+>                 
+>                 (v) urbanstateslocationcount = number of 'urban states' in location description
+>                 
+>                 (vi) urbancitylocation = 1 if location description contains name of atleast one of 
+> the top 20 urban cities
+>                 
+>                 (vii) northeastlocation = 1 if location description contains no state outside the 7
+>  'NorthEast' States
+> 
+> ******************************************************************************
+>                 
+>                 
+> 2. News Coverage Data
+> Source: Access World News DataBase
+> 
+> Number of articles in 4 leading English dailies for a given disaster. Notes:
+>         (i) date range 'startdate : enddatenews'                
+>         (ii) All pairwise combinations of search terms chosen and maximum number of articles used a
+> s final 'coverage' value
+> 
+> This enabled the direct creation of following variale: coverage
+> 
+> ******************************************************************************
+> 
+> 3. Google Trends ' Reader Interest' Data
+> Source: Google Trends
+> 
+> This enabled the direct creation of the following variables: disastersearch, constanttermsearch, al
+> tconstantterm
+> */
+. 
+. 
+. replace totaldeaths=0 if totaldeaths==.
+(0 real changes made)
+
+. 
+. replace totalaffected=totaldeaths if totalaffected==.
+(0 real changes made)
+
+. //40 changes made, i.e. only ~60% total affected data available through emdat
+. 
+. replace totalaffected=totaldeaths if totalaffected<totaldeaths
+(0 real changes made)
+
+. //3 changes made, could be tabulating errors
+. 
+. 
+. gen threestatesandurbanlocation = 1 if threestatesormorelocation==1 & urbanstateslocationcount>0
+(75 missing values generated)
+
+. 
+. replace threestatesandurbanlocation=0 if threestatesandurbanlocation==.
+(75 real changes made)
+
+. 
+. gen twourbanstateslocation=1 if urbanstateslocationcount>1
+(74 missing values generated)
+
+. 
+. replace twourbanstateslocation=0 if twourbanstateslocation==.
+(74 real changes made)
+
+. 
+. gen urbanlocation=1 if urbancitylocation==1 | threestatesandurbanlocation==1 | twourbanstateslocati
+> on==1
+(57 missing values generated)
+
+. 
+. replace urbanlocation=0 if urbanlocation==.
+(57 real changes made)
+
+. 
+. tab urbanlocation
+
+urbanlocati |
+         on |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |         57       55.34       55.34
+          1 |         46       44.66      100.00
+------------+-----------------------------------
+      Total |        103      100.00
+
+. 
+. gen ratio1 = disastersearch/altconstantterm
+
+. 
+. 
+end of do-file
+
+. save "/Users/milisanwalka/Desktop/MassMedia_Mili/editeddata.dta"
+file /Users/milisanwalka/Desktop/MassMedia_Mili/editeddata.dta saved
+
