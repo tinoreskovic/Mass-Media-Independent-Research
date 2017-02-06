@@ -31,7 +31,7 @@ tab urbanlocation distype
 //see relationship between coverage and disaster intensity by urban/rural
 sort urbanlocation
 graph twoway (scatter logcoverage logdeaths if urbanlocation==0) (scatter logcoverage logdeaths if urbanlocation==1) (lfit logcoverage logdeaths if urbanlocation==0) (lfit logcoverage logdeaths if urbanlocation==1), legend(label(1 'Log(Coverage for Rural)') label(2 'Log(Coverage for Urban)')) 
-
+//tin: try to make the data points and the fit lines be of the same color so one can tell which intercept is higher
 
 //see relationship between reader interest and disaster intensity by disastertype
 graph twoway (scatter logratio1 logdeaths) (lfit logratio1 logdeaths), by(distype)
