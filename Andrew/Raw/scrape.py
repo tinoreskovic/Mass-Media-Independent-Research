@@ -73,7 +73,7 @@ def scrape_std(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
         archive_pg_html = BeautifulSoup((requests.get(archive_pg)).content, 'html.parser')
         for section in archive_pg_html.find_all('div', attrs={'class':'section-top archive clearfix'}):
             section_tag = section.find_all('a')
-            if 'Editorial' in str(section_tag):
+            if 'Editorial' in str(section_tag) or 'Business' in str(section_tag) or 'Sports' in str(section_tag):
                 continue
             for link in section_tag:
                 article = main_pg + link.get('href')
