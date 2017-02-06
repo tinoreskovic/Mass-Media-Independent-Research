@@ -4,6 +4,7 @@
 ** 3) You should be saving your plots and regressions results here to a github folder. 
 ** For example: twoway (scatter enc_viol month) saving("~/Mass-Media-Independent-Research/George/plots/name_plot", replace)
 
+use "/Users/greynolds/Documents/Brown University/Senior Year/Economics of Mass Media/Data.dta"
 
 twoway (scatter enc_viol month)
 
