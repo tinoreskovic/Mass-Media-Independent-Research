@@ -53,7 +53,7 @@ replace totalaffected=totaldeaths if totalaffected==.
 
 replace totalaffected=totaldeaths if totalaffected<totaldeaths
 //3 changes made, could be tabulating errors
-
+//tin: meaning these entries were such in the original dataset that you accessed online?
 
 gen threestatesandurbanlocation = 1 if threestatesormorelocation==1 & urbanstateslocationcount>0
 
