@@ -6,6 +6,8 @@
 
 use "/Users/greynolds/Documents/Brown University/Senior Year/Economics of Mass Media/Data.dta"
 
+log using "/Users/greynolds/Documents/Brown University/Senior Year/Economics of Mass Media/C4 Log.smcl"
+
 twoway (scatter enc_viol month)
 
 total enc_viol, over(month)
