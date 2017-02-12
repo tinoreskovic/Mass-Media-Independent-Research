@@ -10,7 +10,7 @@ def build_data(paper, start_date, end_date, d = 0)
     #'xinhua count' 'collective action count' 'leader count' 'article count'
     data = np.array((month_count, 4))
 
-    for filename in os.listdir('..\\Mass Media\\Andrew\\Raw\\' + paper)
+    for filename in os.listdir('..\\Raw\\Data\\' + paper)
         with open(filename, 'r', encoding = 'utf-8') as f:
             article_data = f.readlines()
             year = int(article_data[0][:-1])
@@ -49,7 +49,7 @@ def build_data(paper, start_date, end_date, d = 0)
 
     author_array = np.unique(author_array)
 
-    np.savetxt('..\\Mass Media\\Andrew\\Derived\\' + paper + '_data.csv', data, delimiter = ',')
-    np.savetxt('..\\Mass Media\\Andrew\\Derived\\' + paper + '_author.csv', author_array, delimiter = ',', fmt = '%s')
+    np.savetxt('paper + '_data.csv', data, delimiter = ',')
+    np.savetxt('paper + '_author.csv', author_array, delimiter = ',', fmt = '%s')
 
 return
