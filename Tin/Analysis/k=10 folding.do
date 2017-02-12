@@ -1,7 +1,7 @@
 clear
-use "/Users/tinoreskovic/Desktop/research media/raw data.dta"
+use "~/Google Drive/Mass Media/Tin/Data/raw data.dta"
 log using "/Users/tinoreskovic/Desktop/research media/folding_analysis_log.log", replace
-//10 random groups: 2-folding
+//10 random groups: 10-folding
 set seed 123456789
 generate rannum = uniform()
 sort rannum

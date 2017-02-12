@@ -1,8 +1,6 @@
-This looks good to me. I don't think there's anything that doesn't make sense.
-
+//This looks good to me. I don't think there's anything that doesn't make sense.
 clear
-use "/Users/tinoreskovic/Desktop/research media/raw data.dta"
-log using "/Users/tinoreskovic/Desktop/research media/analysis_log.log", replace
+use "~/Google Drive/Mass Media/Tin/Data/raw data.dta"
 //PART 1: guardian, independent, telegraph:
 reg logvalue logmentions primary i.pos i.transfer_year transfer_age games
 rvfplot
@@ -10,7 +8,7 @@ predict inestimate, xb
 predict inresiduals, r
 twoway (scatter inestimate logvalue) (lfit inestimate logvalue)
 twoway (scatter logvalue logmentions) (lfitci logvalue logmentions)
-reg secondary primary logmentions (PUSH TO APPENDIX)
+reg secondary primary logmentions // (PUSH TO APPENDIX)
 // regression with standardized primary for scale comparison of effects
 reg logvalue logmentions st_primary i.pos i.transfer_year transfer_age games
 // other iterations of (I)  (INCLUDE IN APPENDIX)
@@ -66,7 +64,7 @@ twoway (scatter logvalue logmentions if valuegroup20) (lfitci logvalue logmentio
 reg secondary primary logmentions if valuegroup20
 twoway (scatter value mentionseng3 if valuegroup20) (lfitci value mentionseng3 if valuegroup20)
 //smaller than 10, 20; larger than 5, 10, 15, 20
-reg value mentionseng3 primary i.pos i.transfer_year transfer_age  if valuegroupfirst10 
+reg logvalue logmentions primary i.pos i.transfer_year transfer_age  if valuegroupfirst10 
 rvfplot
 predict first10inestimate, xb
 predict first10inresiduals, r
@@ -74,7 +72,7 @@ twoway (scatter first10inestimate value) (lfit first10inestimate value)
 twoway (scatter value mentionseng3) (lfitci value mentionseng3)
 reg secondary primary mentionseng3 if valuegroupfirst10
 //smaller than 20
-reg value mentionseng3 primary i.pos i.transfer_year transfer_age  if valuegroupfirst20 
+reg logvalue logmentions primary i.pos i.transfer_year transfer_age  if valuegroupfirst20 
 rvfplot
 predict first20inestimate, xb
 predict first20inresiduals, r
