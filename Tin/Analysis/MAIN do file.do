@@ -22,6 +22,7 @@ predict nomediaresiduals, r
 twoway (scatter nomediaestimate logvalue) (lfit nomediaestimate logvalue)
 //team top 5 revenuewise
 reg logvalue logmentions primary i.pos i.transfer_year transfer_age games if team
+reg logvalue logmentions team i.team#c.logmentions primary i.pos i.transfer_year transfer_age games
 rvfplot
 predict teamestimate, xb
 predict teamresiduals, r
