@@ -4,13 +4,15 @@ import os
 import numpy as np
 import re
 
-def build_data(paper, start_date, end_date, d = 0)
+def build_data(paper, start_date = date(2012, 2, 1), end_date = date(2017, 1, 31), d = 0):
+    if 'Derived' in str(os.getcwd()):
+        os.chdir(os.path.join('..', '..'))
+
     month_count = int(end_date.year - start_date.year)*12 + int(end_date.month-start_date.month)
+    #'xinhua count' 'collective action count' 'leader count' 'article count' 'acquired'
+    data = np.zeros((month_count, 5))
 
-    #'xinhua count' 'collective action count' 'leader count' 'article count'
-    data = np.array((month_count, 4))
-
-    for filename in os.listdir('..\\Raw\\Data\\' + paper)
+    for filename in os.listdir('Andrew\\Raw\\Data\\' + paper)
         with open(filename, 'r', encoding = 'utf-8') as f:
             article_data = f.readlines()
             year = int(article_data[0][:-1])
@@ -47,6 +49,8 @@ def build_data(paper, start_date, end_date, d = 0)
                     data[index, 3] += 1
         data[index, 4] += 1
 
+        if year >= 2016 and month >= 4
+            data[index, 5] = 1
     author_array = np.unique(author_array)
 
     np.savetxt('paper + '_data.csv', data, delimiter = ',')

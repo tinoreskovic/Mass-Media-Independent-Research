@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
 import numpy as np
 import os
 import time
@@ -8,6 +8,9 @@ import requests
 
 ###############################scmp#############################################
 def scrape_scmp(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
+    #start in C:\Users\Andrew\Google Drive\Mass-Media-Independent-Research
+    if 'Raw' in str(os.getcwd()):
+        os.chdir(os.path.join('..', '..'))
 
     def daterange(start_date, end_date):
         for n in range(int((end_date - start_date).days)):
@@ -24,16 +27,15 @@ def scrape_scmp(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
 
     article_array = np.array([])
 
-    for i in range(0, page_count):
-        print('Page' + str(i + 1) + '/' + str(page_count))
+    for i in range(0, 3): #page_count
+        print('Page ' + str(i + 1) + '/' + str(page_count))
         archive_pg = 'http://www.scmp.com/content/search/articles/news?' + 'page=' + str(i) + '&' + '&f[0]=ds_created%3A%5B' + str(start_date) + 'T00%3A00%3A00Z%20TO%20' + str(end_date) + 'T23%3A59%3A59Z%5D&f[1]=im_field_section%3A91'
         archive_pg_html = BeautifulSoup((requests.get(archive_pg)).content, 'html.parser')
         for link in archive_pg_html.find_all('h3', attrs={'class':'title'}):
             article_tag = str(link)
             article = main_pg + article_tag[(article_tag.index('href') + 6) : (article_tag.index('\">', article_tag.index('href')))]
             article_array = np.append(article_array, [article])
-            article_html = BeautifulSoup((requests.get(archive_pg_html)).content, 'html.parser')
-
+            article_html = BeautifulSoup((requests.get(article)).content, 'html.parser')
             timestamp = article_html.find(attrs={"name":"cXenseParse:recs:publishtime"})
             if timestamp is None:
                 continue
@@ -41,16 +43,19 @@ def scrape_scmp(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
             month = int(str(timestamp)[20:22])
             day = int(str(timestamp)[23:25])
 
-            if article_html.find_all(attrs={"name":"cXenseParse:scp-author"}) is not None:
-                author = str(article_html.find_all(attrs={"name":"cXenseParse:scp-author"})).strip()
+            if article_html.find(attrs={"name":"cXenseParse:scp-author"}) is not None:
+                author = str(article_html.find(attrs={"name":"cXenseParse:scp-author"})['content']).strip()
             else:
                 author = ''
 
             text_tag = str(article_html.find_all('p'))
             text = re.sub(re.compile('<.*?>'), ' ', text_tag)
 
-            os.makedirs('..\\Mass Media\\Andrew\\Raw\\SCMP')
-            f = open('..\\Mass Media\\Andrew\\Raw\\SCMP\\' + 'SCMP_' + article_count + '.txt','w', encoding='utf-8')
+            try:
+                os.makedirs('Andrew\\Raw\\Data\\SCMP')
+            except:
+                pass
+            f = open('Andrew\\Raw\\Data\\SCMP\\' + 'SCMP_' + str(article_count) + '.txt','w', encoding='utf-8')
             f.write(str(year) + '\n' + str(month) + '\n' + str(day) + '\n' + author + '\n' + text)
             f.close()
             article_count += 1
@@ -58,6 +63,9 @@ def scrape_scmp(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
 
 ######################STD#######################################################
 def scrape_std(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
+    #start in C:\Users\Andrew\Google Drive\Mass-Media-Independent-Research
+    if 'Raw' in str(os.getcwd()):
+        os.chdir(os.path.join('..', '..'))
 
     def daterange(start_date, end_date):
         for n in range(int((end_date - start_date).days)):
@@ -82,6 +90,15 @@ def scrape_std(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
 
     for article in article_array:
         article_html = BeautifulSoup((requests.get(article)).content, 'html.parser')
+
+        date_tag = str(article_html.find('span', attrs={'class':'pull-left'}))
+        date_str = date_tag[(date_tag.rindex('>', 0, -2)+1): date_tag.rindex('<')].strip()
+        print(date_str)
+        date_pub = datetime.strptime(date_str, '%b %d, %Y')
+        day = date_pub.day
+        month = date_pub.month
+        year = date_pub.year
+
         text_tag = str(article_html.find_all(attrs={"class":"content"}))
         text = re.sub(re.compile('<.*?>'), ' ', text_tag)
 
@@ -103,8 +120,11 @@ def scrape_std(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
                     author_tag = 'None'
                     break
         author = re.sub(re.compile('<.*?>'), ' ', author_tag).strip()
-        os.makedirs('..\\Mass Media\\Andrew\\Raw\\STD')
-        f = open('..\\Mass Media\\Andrew\\Raw\\STD\\' + 'STD_' + article_count + '.txt','w', encoding='utf-8')
+        try:
+            os.makedirs('Andrew\\Raw\\Data\\STD')
+        except:
+            pass
+        f = open('Andrew\\Raw\\Data\\STD\\' + 'STD_' + str(article_count) + '.txt','w', encoding='utf-8')
         f.write(str(year) + '\n' + str(month) + '\n' + str(day) + '\n' + author + '\n' + text)
         f.close()
         article_count += 1

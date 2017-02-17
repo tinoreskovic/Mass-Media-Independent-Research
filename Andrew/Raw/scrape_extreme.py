@@ -9,6 +9,9 @@ import requests
 
 #Epoch Times
 def scrape_et(pg_count):
+    #start in C:\Users\Andrew\Google Drive\Mass-Media-Independent-Research
+    if 'Raw' in str(os.getcwd()):
+        os.chdir(os.path.join('..', '..'))
     article_count = 0
     for i in range(1, pg_count + 1):
         pg = 'http://www.theepochtimes.com/n3/front/more-top-stories/page/' + str(i) + '/'
@@ -25,10 +28,10 @@ def scrape_et(pg_count):
             text_tag = str(article_html.find_all('div', attrs={'id':'content'}))
             text = re.sub(re.compile('<.*?>'), ' ', str(text_tag))
             try:
-                os.makedirs('Data\\ET')
+                os.makedirs('Andrew\\Raw\\Data\\ET')
             except:
                 pass
-            f = open('Data\\ET\\' + 'ET_' + str(article_count) + epoch + '.txt','w', encoding='utf-8')
+            f = open('Andrew\\Raw\\Data\\ET\\' + 'ET_' + str(article_count) + epoch + '.txt','w', encoding='utf-8')
             f.write(text)
             f.close()
             article_count += 1
@@ -36,6 +39,9 @@ def scrape_et(pg_count):
 
 #Xinhua
 def scrape_xh():
+    #start in C:\Users\Andrew\Google Drive\Mass-Media-Independent-Research
+    if 'Raw' in str(os.getcwd()):
+        os.chdir(os.path.join('..', '..'))
     article_count = 0
     #http://www.xinhuanet.com/english/china/topnews.htm
     for i in range(1, 9):
@@ -55,10 +61,10 @@ def scrape_xh():
             text_tag = article_html.find_all('div', attrs={'id':'Content', 'class':'artTxt'})
             text = re.sub(re.compile('<.*?>'), ' ', str(text_tag))
             try:
-                os.makedirs('Data\\XH')
+                os.makedirs('Andrew\\Raw\\Data\\XH')
             except:
                 pass
-            f = open('Data\\XH\\' + 'XH_' + str(article_count) + '.txt','w', encoding='utf-8')
+            f = open('Andrew\\Raw\\Data\\XH\\' + 'XH_' + str(article_count) + '.txt','w', encoding='utf-8')
             f.write(text)
             f.close()
             article_count += 1

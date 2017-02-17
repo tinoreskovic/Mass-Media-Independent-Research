@@ -5,4 +5,8 @@ import os
 import time
 import re
 import requests
-import scrape
+from scrape import scrape_scmp
+from scrape import scrape_std
+
+scrape_scmp()
+scrape_std()
