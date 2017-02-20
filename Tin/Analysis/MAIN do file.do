@@ -80,6 +80,16 @@ predict first20inresiduals, r
 twoway (scatter first20inestimate value) (lfit first20inestimate value)
 twoway (scatter value mentionseng3) (lfitci value mentionseng3)
 reg secondary primary mentionseng3 if valuegroupfirst20
+// INTERACTIONS
+reg logvalue logmentions primary c.primary#i.team i.pos i.transfer_year transfer_age games
+reg logvalue logmentions c.logmentions#i.team primary i.pos i.transfer_year transfer_age games
+reg logvalue logmentions c.logmentions#i.team primary c.primary#i.team i.pos i.transfer_year transfer_age games
+reg logvalue logmentions c.logmentions#i.team primary c.primary#i.team i.pos i.transfer_year transfer_age c.transfer_age#i.team games c.games#i.team
+reg logvalue logmentions c.logmentions#i.team primary c.primary#i.team i.pos i.pos#i.team i.transfer_year i.transfer_year#i.team transfer_age c.transfer_age#i.team games c.games#i.team
+reg logvalue primary team c.primary#i.team
+reg logvalue primary c.primary#i.team 
+
+
 <<<<<<< Updated upstream
 =======
 reg secondary primary mentionseng3 if valuegroup20
