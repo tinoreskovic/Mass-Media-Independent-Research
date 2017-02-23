@@ -128,9 +128,10 @@ bg_array = np.array([bg, diff_bg])
 print(np.transpose(ug_array))
 print(np.transpose(bg_array))
 
-with open('Andrew\\Derived\\' + 'rel' + '_ug' + '.csv', 'w', newline = '') as fp:
-    a = csv.writer(fp, delimiter=',')
-    a.writerows(np.transpose(ug_array))
-with open('Andrew\\Derived\\' + 'rel' + '_bg' + '.csv', 'w', newline = '') as fp:
-    a = csv.writer(fp, delimiter=',')
-    a.writerows(np.transpose(bg_array))
+for paper in ['XH', 'ET']:
+    with open('Andrew\\Derived\\' + paper + '_ug' + '_rel' + '.csv', 'w', newline = '') as fp:
+        a = csv.writer(fp, delimiter=',')
+        a.writerows(np.transpose(ug_array))
+    with open('Andrew\\Derived\\' + paper + '_bg' + '_rel' + '.csv', 'w', newline = '') as fp:
+        a = csv.writer(fp, delimiter=',')
+        a.writerows(np.transpose(bg_array))
