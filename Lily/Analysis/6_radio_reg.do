@@ -9,12 +9,12 @@ global output "~/Google Drive/Mass Media/Lily/Output/"
 
 
 *** reshape for analysis 
-loc year = "1916 1916 1918 1920 1920 1922 1924 1924 1926 1928 1928 1930 1932 1932"
-loc pres = "10010010010010"
+loc year = "1916 1916 1918 1920 1920 1922 1924 1924 1926 1928 1928 1930 1932 1932 1934 1936 1936 1938 1940 1940 1942"
+loc pres = "100100100100100100100"
 
 loc j = 1
-forvalues i = 1/14 {
- use "${output}panel_data.dta"
+forvalues i = 1/21 {
+ use "${output}panel_data.dta", clear
  rename (dem`i' rep`i' total_vote`i' percent_vote`i') (Democrat Republican overall turnout)
 drop dem* rep* total_vote* percent_vote*
 gen presidential = substr("`pres'", `i', 1)
@@ -23,7 +23,7 @@ loc j = `j' + 5
 save "${temp}part`i'", replace
 }
 
-	forvalues i = 1/13 {
+	forvalues i = 1/20 {
 		append using "${temp}part`i'"
 	}
 	destring year, replace
@@ -123,7 +123,7 @@ label var interest_sq "Quadratic Years Broadcasting"
 
 gen county_sq = interest_county * interest_county
 
-drop if (year < 1921 | year > 1931)
+///drop if (year < 1921 | year > 1931)
 
 foreach var in  percent_urban percent_nonwhite log_pop party_diff{
 gen inter_`var' = interest_county * `var'
@@ -152,14 +152,88 @@ label var county_sq "Quadratic Years Broadcasting"
  label var dma_inter_log_pop "Log Population * Years Broadcasting" 
  
 
+gen county_pres = interest_county*president_year
+gen county_non = interest_county*(president_year == 0)  
+gen county_cub = interest_county^3
+
+egen county_region = group(county_id dma) 
+
+bys county_id: egen max_first_county = max(first_county)
+	assert max_first_county== first_county
+
+reg turnout  i.year i.dmaindex if !mi(first_county) , vce(cluster county_id) 
+
+	predict early_resid, residuals
+	reg turnout i.year  i.dmaindex if mi(first_county) , vce(cluster county_id) 
+	
+ 	predict later_resid, residuals
+
+	reg turnout  i.year i.dmaindex , vce(cluster county_id) 
+	
+	predict lin, xb
+	
+	preserve 
+	drop if year > 1939 //WW2 in 1939
+	collapse (mean)  early_resid later_resid, by(year) 
+	gen difference = early_resid - later_resid 
+	
+	sort year 
+	scatter difference year, connect(l)  
+	restore 
+
+	preserve
+	drop if year > 1939 
+	collapse (mean) lin , by(year president_year) 
+	scatter lin year if president_year == 1, connect(l) 
+	restore 
+	
+	preserve
+	drop if year > 1939 
+	collapse (mean) lin , by(year president_year) 
+	scatter lin year if president_year == 0, connect(l) 
+	restore 
+	
+	
+
+
+
+
+
 eststo: areg turnout interest_county i.year,   absorb(county_id) vce(cluster county_id)
-eststo: areg turnout interest_county interest_pres_county president_year  i.year, absorb(county_id) vce(cluster county_id)
-eststo: areg turnout interest_county interest_pres_county president_year party_diff county_sq i.year, absorb(county_id) vce(cluster county_id)
+
+	test i.dmaindex
+eststo: areg turnout interest_county i.year,  absorb(county_id) vce(cluster county_id)
+
+
+	predict linear_first, xb
+	predict resid_first, residuals
+
+eststo: areg turnout county_pres  county_non i.year, absorb(county_id) vce(cluster county_id) 
+
+		predict linear_second, xb
+		predict resid_second, residuals
+
+		preserve
+		collapse (mean) linear_first, by(interest_county president_year)
+		sort interest_county
+		scatter linear_first interest_county if president_year == 1
+		scatter linear_first interest_county if president_year == 0
+		restore
+
+		preserve
+		collapse (mean) resid_second, by(county_pres  county_non county_id) 
+		twoway (scatter resid_second interest_county
+		restore
 
 
  esttab est1 est2 est3 using "/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/county.csv", label star se stats(ar2 N) replace drop(*.year) 
 
 
+ *** Visual graph *** 
+ 
+ reg turnout i.year i.county_id if year < 1926
+ 
+ 
 ** Allowing heteregenoeity in time and years broadcasting by 
 eststo: areg turnout interest_county i.year#c.percent_nonwhite i.year#c.percent_urban i.year#c.log_pop  i.year,   absorb(county_id) vce(cluster county_id)
 eststo: areg turnout interest_county interest_pres_county president_year i.year#c.percent_nonwhite i.year#c.percent_urban i.year#c.log_pop  i.year, absorb(county_id) vce(cluster county_id)

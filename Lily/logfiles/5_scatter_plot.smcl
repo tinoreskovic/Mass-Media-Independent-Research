@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/5_scatter_plot.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res} 5 Feb 2017, 17:54:10
+ {txt}opened on:  {res} 9 Feb 2017, 21:51:53
 {txt}
 {com}. cd "~/Google Drive/Mass Media/Lily/Output/"
 {res}/Users/lilyhoffman/Google Drive/Mass Media/Lily/Output
@@ -19,13 +19,14 @@
 {txt}  2{com}.         drop V`i'
 {txt}  3{com}.         {c )-}       
 {txt}
-{com}. forvalues i = 511/759 {c -(}
+{com}. forvalues i = 567/759 {c -(}
 {txt}  2{com}.         drop V`i'
 {txt}  3{com}.         {c )-}
 {txt}
 {com}. loc j = 1
 {txt}
-{com}. foreach var in V402 V409 V418 V428 V434 V443 V452 V458 V468 V477 V483 V490 V498 V504 {c -(}
+{com}. foreach var in V402 V409 V418 V428 V434 V443 V452 V458 V468 V477 V483 V490 V498 V504 ///
+>                 V511 V521 V527 V536 V546 V552 V559  {c -(}
 {txt}  2{com}.         replace `var' = . if `var' > 100
 {txt}  3{com}.         replace `var' = . if `var' == 0 
 {txt}  4{com}.         rename `var' dem`j'
@@ -59,10 +60,25 @@
 (0 real changes made)
 {res}{txt}(295 real changes made, 295 to missing)
 (100 real changes made, 100 to missing)
+{res}{txt}(274 real changes made, 274 to missing)
+(155 real changes made, 155 to missing)
+{res}{txt}(273 real changes made, 273 to missing)
+(0 real changes made)
+{res}{txt}(387 real changes made, 387 to missing)
+(176 real changes made, 176 to missing)
+{res}{txt}(280 real changes made, 280 to missing)
+(203 real changes made, 203 to missing)
+{res}{txt}(294 real changes made, 294 to missing)
+(0 real changes made)
+{res}{txt}(590 real changes made, 590 to missing)
+(232 real changes made, 232 to missing)
+{res}{txt}(332 real changes made, 332 to missing)
+(293 real changes made, 293 to missing)
 {res}{txt}
 {com}. loc k = 1
 {txt}
-{com}. foreach var in V403 V410 V419 V429 V435 V444 V453 V459 V469 V478 V484 V491 V499 V505 {c -(}
+{com}. foreach var in V403 V410 V419 V429 V435 V444 V453 V459 V469 V478 V484 V491 V499 V505 ///
+>         V512 V522 V528 V537 V547 V553 V560 {c -(}
 {txt}  2{com}.         replace `var' = . if `var' > 100
 {txt}  3{com}.         replace `var' = . if `var' == 0 
 {txt}  4{com}.         rename `var' rep`k'
@@ -96,10 +112,25 @@
 (113 real changes made, 113 to missing)
 {res}{txt}(294 real changes made, 294 to missing)
 (706 real changes made, 706 to missing)
+{res}{txt}(274 real changes made, 274 to missing)
+(1,743 real changes made, 1,743 to missing)
+{res}{txt}(273 real changes made, 273 to missing)
+(111 real changes made, 111 to missing)
+{res}{txt}(387 real changes made, 387 to missing)
+(841 real changes made, 841 to missing)
+{res}{txt}(282 real changes made, 282 to missing)
+(1,784 real changes made, 1,784 to missing)
+{res}{txt}(294 real changes made, 294 to missing)
+(525 real changes made, 525 to missing)
+{res}{txt}(590 real changes made, 590 to missing)
+(1,190 real changes made, 1,190 to missing)
+{res}{txt}(334 real changes made, 334 to missing)
+(1,895 real changes made, 1,895 to missing)
 {res}{txt}
 {com}. loc i = 1
 {txt}
-{com}. foreach var in V408 V417 V427 V433 V442 V451 V457 V467 V476 V482 V489 V497 V503 V510 {c -(}
+{com}. foreach var in V408 V417 V427 V433 V442 V451 V457 V467 V476 V482 V489 V497 V503 V510 ///
+>         V520 V526 V535 V545 V551 V558  V566 {c -(}
 {txt}  2{com}.         replace `var' = . if `var' > 100
 {txt}  3{com}.         replace `var' = . if `var' == 0 
 {txt}  4{com}.         rename `var' percent_vote`i'
@@ -133,11 +164,26 @@
 (0 real changes made)
 {res}{txt}(417 real changes made, 417 to missing)
 (0 real changes made)
+{res}{txt}(392 real changes made, 392 to missing)
+(1 real change made, 1 to missing)
+{res}{txt}(400 real changes made, 400 to missing)
+(0 real changes made)
+{res}{txt}(510 real changes made, 510 to missing)
+(0 real changes made)
+{res}{txt}(395 real changes made, 395 to missing)
+(0 real changes made)
+{res}{txt}(375 real changes made, 375 to missing)
+(0 real changes made)
+{res}{txt}(710 real changes made, 710 to missing)
+(0 real changes made)
+{res}{txt}(448 real changes made, 448 to missing)
+(0 real changes made)
 {res}{txt}
 {com}. 
 . loc i = 1
 {txt}
-{com}. foreach var in V407 V416 V426 V432 V441 V450 V456 V466 V475 V481 V488 V496 V502 V509 {c -(}
+{com}. foreach var in V407 V416 V426 V432 V441 V450 V456 V466 V475 V481 V488 V496 V502 V509 ///
+>                 V519 V525 V534 V544 V550 V557 V565 {c -(}
 {txt}  2{com}.         replace `var' = . if `var' == 9999999
 {txt}  3{com}.         replace `var' = . if `var' == 0 
 {txt}  4{com}.         rename `var' total_vote`i'
@@ -170,6 +216,20 @@
 {res}{txt}(271 real changes made, 271 to missing)
 (1 real change made, 1 to missing)
 {res}{txt}(295 real changes made, 295 to missing)
+(0 real changes made)
+{res}{txt}(273 real changes made, 273 to missing)
+(1 real change made, 1 to missing)
+{res}{txt}(273 real changes made, 273 to missing)
+(0 real changes made)
+{res}{txt}(387 real changes made, 387 to missing)
+(0 real changes made)
+{res}{txt}(280 real changes made, 280 to missing)
+(0 real changes made)
+{res}{txt}(294 real changes made, 294 to missing)
+(0 real changes made)
+{res}{txt}(590 real changes made, 590 to missing)
+(0 real changes made)
+{res}{txt}(332 real changes made, 332 to missing)
 (0 real changes made)
 {res}{txt}
 {com}. 
@@ -240,7 +300,6 @@
 {com}. sort year
 {txt}
 {com}. scatter total_station year, mlabel(total_station) ytitle("Total Stations") title("Total Broadcasting Stations by Year") connect(l) subtitle("Yearly Measurement: June 30th") saving("/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/total_stations", replace)
-{res}{txt}(note: file /Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/total_stations.gph not found)
 {res}{txt}(file /Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/total_stations.gph saved)
 
 {com}. restore 
@@ -259,12 +318,10 @@
 {com}. 
 . hist first_dma, frequency ytitle("Total Counties") title("Year of First Broadcasting Station") xtitle("Year") subtitle("By DMA") saving("/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/hist_dma", replace)
 {txt}(bin={res}34{txt}, start={res}1922{txt}, width={res}.26470588{txt})
-{res}{txt}(note: file /Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/hist_dma.gph not found)
 {res}{txt}(file /Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/hist_dma.gph saved)
 
 {com}. hist first_county, frequency ytitle("Total Counties") title("Year of First Broadcasting Station") xtitle("Year") subtitle("By County") saving("/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/hist_county", replace)
 {txt}(bin={res}25{txt}, start={res}1922{txt}, width={res}.36{txt})
-{res}{txt}(note: file /Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/hist_county.gph not found)
 {res}{txt}(file /Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/hist_county.gph saved)
 
 {com}. 
@@ -281,7 +338,6 @@
 {txt}
 {com}. twoway scatter percent_radio first_dma, ysc(range(0 .5)) ylabel(0(.1).5) ytitle("Families Radio Ownership") xtitle("First Year Broadcasting in DMA") ///
 >  title("Family Radio Ownership by DMA First Broadcasting Year") subtitle("1930 Census") saving("/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/radio_ownership", replace)
-{res}{txt}(note: file /Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/radio_ownership.gph not found)
 {res}{txt}(file /Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/radio_ownership.gph saved)
 
 {com}. restore
@@ -295,7 +351,7 @@
       {txt}name:  {res}<unnamed>
        {txt}log:  {res}/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/5_scatter_plot.smcl
   {txt}log type:  {res}smcl
- {txt}closed on:  {res} 5 Feb 2017, 17:54:21
+ {txt}closed on:  {res} 9 Feb 2017, 21:52:05
 {txt}{.-}
 {smcl}
 {txt}{sf}{ul off}
