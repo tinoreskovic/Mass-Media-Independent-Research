@@ -1,4 +1,3 @@
-//This looks good to me. I don't think there's anything that doesn't make sense.
 clear
 use "~/Google Drive/Mass Media/Tin/Data/raw data.dta"
 //PART 1: guardian, independent, telegraph:
