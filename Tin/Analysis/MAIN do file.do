@@ -84,9 +84,13 @@ reg logvalue logmentions primary c.primary#i.team i.pos i.transfer_year transfer
 reg logvalue logmentions c.logmentions#i.team primary i.pos i.transfer_year transfer_age games
 reg logvalue logmentions c.logmentions#i.team primary c.primary#i.team i.pos i.transfer_year transfer_age games
 reg logvalue logmentions c.logmentions#i.team primary c.primary#i.team i.pos i.transfer_year transfer_age c.transfer_age#i.team games c.games#i.team
-reg logvalue logmentions c.logmentions#i.team primary c.primary#i.team i.pos i.pos#i.team i.transfer_year i.transfer_year#i.team transfer_age c.transfer_age#i.team games c.games#i.team
-reg logvalue primary team c.primary#i.team
+reg logvalue logmentions c.logmentions#i.team primary c.primary#i.team i.pos i.pos#i.team i.transfer_year i.transfer_year#i.team transfer_age c.transfer_age#i.team games c.games#i.team i.team
+predict fully_interacted, xb
+predict fully_interacted_r, r
+//
+reg logvalue primary i.team c.primary#i.team
 reg logvalue primary c.primary#i.team 
+//
 
 
 <<<<<<< Updated upstream
