@@ -94,7 +94,15 @@ collapse (sum) radiorep famtot, by(first_dma)
 sort first_dma
 gen percent_radio = radiorep/famtot
 twoway scatter percent_radio first_dma, ysc(range(0 .5)) ylabel(0(.1).5) ytitle("Families Radio Ownership") xtitle("First Year Broadcasting in DMA") ///
- title("Family Radio Ownership by DMA First Broadcasting Year") subtitle("1930 Census") saving("/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/radio_ownership", replace)
+ title("Family Radio Ownership by DMA First Broadcasting Year") subtitle("1930 Census") saving("/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/radio_ownership_dma", replace)
+restore
+
+preserve
+collapse (sum) radiorep famtot, by(first_county)
+sort first_county
+gen percent_radio = radiorep/famtot
+twoway scatter percent_radio first_county, ysc(range(0 .5)) ylabel(0(.1).5) ytitle("Families Radio Ownership") xtitle("First Year Broadcasting in County") ///
+ title("Family Radio Ownership by County First Broadcasting Year") subtitle("1930 Census") saving("/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/plots/radio_ownership_county", replace)
 restore
 
 save "${ouput}panel_data", replace
