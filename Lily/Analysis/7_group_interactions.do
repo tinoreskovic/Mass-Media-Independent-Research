@@ -100,96 +100,41 @@ ytitle("Year-Group Interaction") subtitle("Relative to First Group to Receive Ra
 
  
  restore
-****************************	
-*** Simple panel regression *****
+****************************
 
-gen dma_avail = year > first_dma
+preserve 
+
+keep if year >= 1920 & year <= 1931	
+*** Simple panel regression: DMA *****
+
+gen dma_avail = year > first_dma if !mi(first_dma)
+replace dma_avail = 0 if mi(first_dma)
 	
 label var dma_avail "DMA Access"
 
-eststo: areg turnout dma_avail i.year, absorb(county_id)
-eststo: areg turnout dma_avail i.year if president_year == 1 , absorb(county_id)
-eststo: areg turnout dma_avail i.year if president_year == 0 , absorb(county_id)
+eststo: areg turnout dma_avail i.year, absorb(county_id) vce(cluster dmaindex)
+eststo: areg turnout dma_avail i.year if president_year == 1 , absorb(county_id) vce(cluster dmaindex)
+eststo: areg turnout dma_avail i.year if president_year == 0 , absorb(county_id) vce(cluster dmaindex)
 *************************************************************************************
 
+*** Simple panel regression: County *****
 
-reg turnout i.year##i.group_dma 
-predict dma_predict, xb
-collapse (mean) dma_predict, by(year group_dma president_year) 
+gen radio = year > first_county if !mi(first_county)
+replace radio = 0 if mi(first_county)
+assert !mi(radio)
 
-sort year
-twoway (scatter dma_predict year if group_dma == 1 & president_year ==1, connect(l)) ///
-(scatter dma_predict year if group_dma == 2 & president_year ==1, connect(l)), ///
- legend(label(1 "Radio: 1922-1928")  label(2 "Radio: 1929-1931") label(3 "Radio: 1932 onward")) title("DMA: Predicted Turnout") subtitle("Presidential Year") ytitle("Mean Linear Prediction") ///
- note("Controlling for year, group, and year-group interactions")
- 
- twoway (scatter dma_predict year if group_dma == 1 & president_year ==0 , connect(l)) ///
-(scatter dma_predict year if group_dma == 2 & president_year ==0, connect(l)), ///
- legend(label(1 "Radio: 1922-1928")  label(2 "Radio: 1929-1931") label(3 "Radio: 1932 onward")) title("DMA: Predicted Turnout") subtitle("Non-Presidential Year") ytitle("Mean Linear Prediction") ///
- note("Controlling for year, group, and year-group interactions")
- 
-restore 
-	
-	
-	***************
+eststo: areg turnout radio i.year, absorb(county_id) vce(cluster county_id)
+eststo: areg turnout radio i.year if president_year == 1 , absorb(county_id) vce(cluster county_id)
+eststo: areg turnout radio i.year if president_year == 0 , absorb(county_id) vce(cluster county_id)
 
-		
-		
-	gen type_election = 1 if presidential == 1 
-	replace type_election = 2 if presidential ==0 & president_year == 1
-	replace type_election = 3 if president_year == 0 
-		
-gen pseudo_turnout = turnout if year <= first_county
-		bys county_id type_election: egen max_year = max(year) if !mi(pseudo_turnout) & !mi(first_county)
-		gen previous_year = turnout if year == max_year
-	
-	bys county_id type: egen max_type = max(previous_year)
-	replace previous_year = max_type
-	
-	replace pseudo_turnout = (1.03) *previous_year if mi(pseudo_turnout) & !mi(first_county)
-		
-		reg pseudo_turnout i.year##i.group
-		predict pseudo_turn, xb
-		
-		preserve
-		
-				collapse (mean) pseudo_turn, by(year president_year group)
+****************************************************************************************************************************** END
+restore
+
+save "${output}analysis_part2", replace
 
 
-		
-		twoway (scatter pseudo_turn year if group == 1 & president_year == 1 & year < 1936,   xline(1922) xline(1929) connect(l))  (scatter pseudo_turn year if group == 2 &  president_year == 1 & year < 1936, connect(l)), ///
-		legend(label(1 "Radio: 1922-1928") label(2 "Radio: 1929-onward")) title("Turnout: Presidential Election Year") ytitle("Percent Turnout (Mean Linear Prediction)") 
-		
-		twoway (scatter pseudo_turn year if group == 1 & president_year == 0 & year < 1936,   xline(1922) xline(1929) connect(l))  (scatter pseudo_turn year if group == 2 &  president_year == 0 & year < 1936, connect(l)), ///
-		legend(label(1 "Radio: 1922-1928") label(2 "Radio: 1929-onward")) title("Turnout: Non-Presidential Election Year") ytitle("Percent Turnout (Mean Linear Prediction)") 
-		
-		restore
-		
 
 	
-	****** For new grouping : By actual county **** 
-	
-	preserve 
-	
-reg turnout i.year##i.group
-
-		predict turnout_actual, xb	
-		
-		drop if year < 1918
-		
-		collapse (mean) turnout_actual, by(year president_year group)
-		sort year
-	
-		
-		twoway (scatter turnout_actual year if group == 1 & president_year == 1 & year < 1936,   xline(1922) xline(1929) connect(l))  (scatter turnout_actual year if group == 2 &  president_year == 1 & year < 1936, connect(l)), ///
-		legend(label(1 "Radio: 1922-1928") label(2 "Radio: 1929-onward")) title("Turnout: Presidential Election Year") ytitle("Percent Turnout (Mean Linear Prediction)") 
-		
-		twoway (scatter turnout_actual year if group == 1 & president_year == 0 & year < 1936,   xline(1922) xline(1929) connect(l))  (scatter turnout_actual year if group == 2 &  president_year == 0 & year < 1936, connect(l)), ///
-		legend(label(1 "Radio: 1922-1928") label(2 "Radio: 1929-onward")) title("Turnout: Non-Presidential Election Year") ytitle("Percent Turnout (Mean Linear Prediction)") 
-		
-		
-		restore
-
 drop if year >= 1932 | year < 1920	
 
 gen radio = year > first_county
