@@ -127,6 +127,19 @@ drop if state == "HI" // state not create yet
 drop if state == "PI" // state not create yet
 
 replace state = "MO" if town == "Joplin"
+
+*** From new source: earlier stations 1920-1921 ** 
+
+/* 2	05/--/1921	WABC - 770	New York, NY	WJZ
+3	09/15/1921	WBZ - 1030	Boston, MA	WBZ
+4	10/13/1921	WWJ - 950	Detroit, MI	WBL
+5	11/09/1921	KYW - 1060	Philadelphia, PA	KYW
+6	12/07/1921	KWG - 1230	Stockton, CA	KWG
+7	12/08/1921	KNX - 1070	Los Angeles, CA	KGC
+8	12/09/1921	KCBS - 740	San Francisco, CA	KQW
+*/ 
+
+
 save "${output}radio_compile", replace
 
 
