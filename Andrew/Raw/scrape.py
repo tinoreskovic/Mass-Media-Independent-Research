@@ -7,7 +7,7 @@ import re
 import requests
 
 ###############################scmp#############################################
-def scrape_scmp(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
+def scrape_scmp(start_date = date(2014, 3, 1), end_date = date(2017, 2, 28)):
     #start in C:\Users\Andrew\Google Drive\Mass-Media-Independent-Research
     if 'Raw' in str(os.getcwd()):
         os.chdir(os.path.join('..', '..'))
@@ -27,7 +27,7 @@ def scrape_scmp(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
 
     article_array = np.array([])
 
-    for i in range(0, 3): #page_count
+    for i in range(0, page_count):
         print('Page ' + str(i + 1) + '/' + str(page_count))
         archive_pg = 'http://www.scmp.com/content/search/articles/news?' + 'page=' + str(i) + '&' + '&f[0]=ds_created%3A%5B' + str(start_date) + 'T00%3A00%3A00Z%20TO%20' + str(end_date) + 'T23%3A59%3A59Z%5D&f[1]=im_field_section%3A91'
         archive_pg_html = BeautifulSoup((requests.get(archive_pg)).content, 'html.parser')
@@ -35,7 +35,18 @@ def scrape_scmp(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
             article_tag = str(link)
             article = main_pg + article_tag[(article_tag.index('href') + 6) : (article_tag.index('\">', article_tag.index('href')))]
             article_array = np.append(article_array, [article])
-            article_html = BeautifulSoup((requests.get(article)).content, 'html.parser')
+            try:
+                article_html = BeautifulSoup((requests.get(article)).content, 'html.parser')
+            except:
+                time.sleep(10)
+                try:
+                    article_html = BeautifulSoup((requests.get(article)).content, 'html.parser')
+                except:
+                    time.sleep(30)
+                    try:
+                        article_html = BeautifulSoup((requests.get(article)).content, 'html.parser')
+                    except:
+                        print('Page: ' + str(i) + ' article: ' + article)
             timestamp = article_html.find(attrs={"name":"cXenseParse:recs:publishtime"})
             if timestamp is None:
                 continue
@@ -43,6 +54,8 @@ def scrape_scmp(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
             month = int(str(timestamp)[20:22])
             day = int(str(timestamp)[23:25])
 
+            if date(year, month, day) > end_date:
+                continue
             if article_html.find(attrs={"name":"cXenseParse:scp-author"}) is not None:
                 author = str(article_html.find(attrs={"name":"cXenseParse:scp-author"})['content']).strip()
             else:
@@ -62,7 +75,7 @@ def scrape_scmp(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
     return
 
 ######################STD#######################################################
-def scrape_std(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
+def scrape_std(start_date = date(2014, 3, 1), end_date = date(2017, 2, 28)):
     #start in C:\Users\Andrew\Google Drive\Mass-Media-Independent-Research
     if 'Raw' in str(os.getcwd()):
         os.chdir(os.path.join('..', '..'))
@@ -75,7 +88,7 @@ def scrape_std(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
     article_array = np.array([])
     article_count = 0
 
-    for today in daterange(date(2017, 1, 3), date(2017, 1, 5)):
+    for today in daterange(start_date, end_date):
         main_pg = 'http://www.thestandard.com.hk/'
         archive_pg = 'http://www.thestandard.com.hk/archive.php?date=' + today.strftime('%Y-%m-%d')
         archive_pg_html = BeautifulSoup((requests.get(archive_pg)).content, 'html.parser')
@@ -89,15 +102,28 @@ def scrape_std(start_date = date(2012, 2, 1), end_date = date(2017, 1, 31)):
     article_array = np.unique(article_array)
 
     for article in article_array:
-        article_html = BeautifulSoup((requests.get(article)).content, 'html.parser')
+        try:
+            article_html = BeautifulSoup((requests.get(article)).content, 'html.parser')
+        except:
+            time.sleep(10)
+            try:
+                article_html = BeautifulSoup((requests.get(article)).content, 'html.parser')
+            except:
+                time.sleep(30)
+                try:
+                    article_html = BeautifulSoup((requests.get(article)).content, 'html.parser')
+                except:
+                    print('Article: ' + article)
 
         date_tag = str(article_html.find('span', attrs={'class':'pull-left'}))
         date_str = date_tag[(date_tag.rindex('>', 0, -2)+1): date_tag.rindex('<')].strip()
-        print(date_str)
         date_pub = datetime.strptime(date_str, '%b %d, %Y')
         day = date_pub.day
         month = date_pub.month
         year = date_pub.year
+
+        if date(year, month, day) > end_date:
+            continue
 
         text_tag = str(article_html.find_all(attrs={"class":"content"}))
         text = re.sub(re.compile('<.*?>'), ' ', text_tag)
