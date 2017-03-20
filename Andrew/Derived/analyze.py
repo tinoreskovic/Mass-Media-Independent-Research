@@ -1,13 +1,17 @@
 import csv
 import datetime
-from datetime import date
+from datetime import date, timedelta
 import os
 import numpy as np
 import re
 
-def build_data(paper, start_date = date(2012, 2, 1), end_date = date(2017, 1, 31), d = 0):
+def build_data(paper, start_yr = 2014, start_mo = 4, end_yr = 2017, end_mo = 2, d = 0):
     if 'Derived' in str(os.getcwd()):
         os.chdir(os.path.join('..', '..'))
+
+    start_date = date(start_yr, start_mo, 1)
+    end_date = date(end_yr, end_mo+1, 1) - timedelta(days=1)
+
     coll_act = list()
     legco = list()
     ccp = list()
@@ -40,7 +44,13 @@ def build_data(paper, start_date = date(2012, 2, 1), end_date = date(2017, 1, 31
             author = re.sub(r'[^\w\s]', '', article_data[3][:-1]).lower()
             author = re.sub(r'[^\x00-\x7F]+',' ', author).strip()
             author_array = np.append(author_array, [author])
-            article_text = re.sub(r'[^\w\s]', '', article_data[4][:-1])
+
+            article_text_list = article_data[4:]
+            article_text = ''
+            for line in article_text_list:
+                article_text = article_text + line + ' '
+
+            article_text = re.sub(r'[^\w\s]', '', article_text)
             article_text = re.sub(r'[0-9_]', '', article_text).lower()
             article_text = re.sub(r'[^\x00-\x7F]+',' ', article_text).strip()
 

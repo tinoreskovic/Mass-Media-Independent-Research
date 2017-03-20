@@ -1,5 +1,5 @@
 import csv
-from datetime import date
+from datetime import date, timedelta
 import os
 import nltk
 from nltk.util import ngrams
@@ -12,7 +12,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 def cos_dist_XH_ET(start_yr = 2015, start_mo = 7, end_yr = 2016, end_mo = 11):
     start_date = date(start_yr, start_mo, 1)
-    end_date = date(end_yr, end_mo, 30)
+    end_date = date(end_yr, end_mo+1, 1) - timedelta(days=1)
     period_length = (end_date.year - start_date.year) * 12 + (end_date.month - start_date.month) + 1
     #start in C:\Users\Andrew\Google Drive\Mass-Media-Independent-Research
     if 'Derived' in str(os.getcwd()):
@@ -62,14 +62,21 @@ def cos_dist_XH_ET(start_yr = 2015, start_mo = 7, end_yr = 2016, end_mo = 11):
                     continue
                 author = article_data[3][:-1].lower()
                 author = author.strip()
-                article_text = article_data[4]
+
                 if ('xinhua' == author or 'reuters' in author or 'agenc' in author or 'business insider' == author
                     or 'ap' == author or 'press' in author or 'afp' == author or 'bloom' in author
                     or 'guardian' in author or 'gdn' == author or 'post' in author or 'tribune news service' == author or 'tns' == author
                     or 'new york times' == author or 'nyt' == author or 'wire' == author or 'la times' == author or 'kyodo' == author):
                     continue
+
+                article_text_list = article_data[4:]
+                article_text = ''
+                for line in article_text_list:
+                    article_text = article_text + line + ' '
+
                 if 'China' not in article_text and 'Chinese' not in article_text and 'Hong Kong' not in article_text:
                     continue
+
                 article_text = re.sub(r'[^\w\s]', '', article_text)
                 article_text = re.sub(r'[0-9_]', '', article_text).lower()
                 article_text = re.sub(r'[^\x00-\x7F]+',' ', article_text).strip()
