@@ -1,25 +1,25 @@
 clear
 use "~/Google Drive/Mass Media/Tin/Data/raw data.dta"
-reg logvalue logmentions i.pos i.transfer_year transfer_age games if team==1
+reg logvalue logmentions i.POSI i.transfer_year transfer_age games if team==1
 predict valueQ_r5, r 
-reg primary logmentions i.pos i.transfer_year transfer_age games if team==1
+reg primary logmentions i.POSI i.transfer_year transfer_age games if team==1
 predict primary_r5, r 
 
 
 
-reg logvalue primary i.pos i.transfer_year transfer_age games if team==1
+reg logvalue primary i.POSI i.transfer_year transfer_age games if team==1
 predict valueP_r5, r
-reg logmentions primary i.pos i.transfer_year transfer_age games if team==1
+reg logmentions primary i.POSI i.transfer_year transfer_age games if team==1
 predict prominence_r5, r
 //
-reg logvalue logmentions i.pos i.transfer_year transfer_age games if team==0
+reg logvalue logmentions i.POSI i.transfer_year transfer_age games if team==0
 predict valueQ_r0, r
-reg primary logmentions i.pos i.transfer_year transfer_age games if team==0
+reg primary logmentions i.POSI i.transfer_year transfer_age games if team==0
 predict primary_r0, r
 
-reg logvalue primary i.pos i.transfer_year transfer_age games if team==0
+reg logvalue primary i.POSI i.transfer_year transfer_age games if team==0
 predict valueP_r0, r
-reg logmentions primary i.pos i.transfer_year transfer_age games if team==0
+reg logmentions primary i.POSI i.transfer_year transfer_age games if team==0
 predict prominence_r0, r
 //
 reg valueQ_r5 primary_r5 if team==1
