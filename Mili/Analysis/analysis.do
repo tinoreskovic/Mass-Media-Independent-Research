@@ -56,6 +56,8 @@ regress logcoverage logratio1 logdeaths urbanlocation i.distype i.year
 predict residual, r
 predict coverageestimate, xb
 
+regress logcoverage logdeaths urbanlocation i.distype i.year
+
 sort urbanlocation
 
 twoway (histogram residual if urbanlocation==1, color(green)) (histogram residual if urbanlocation==0, fcolor(none) lcolor(black)), legend(order(1 "Urban" 2 "Rural" ))
