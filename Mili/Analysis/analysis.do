@@ -1,20 +1,32 @@
-log using "/Users/milisanwalka/Desktop/MassMedia_Mili/analysis_log.log", replace
+//log using "/Users/milisanwalka/Desktop/MassMedia_Mili/analysis_log.log", replace
 
 
 //generation of variable logs
-gen logdeaths = ln(totaldeaths)
-replace logdeaths=0 if logdeaths==.
 
-gen logcoverage = ln(coverage)
-replace logcoverage=0 if logcoverage==.
+cd "/Users/milisanwalka/Desktop/Brown/Classes/Spring2017/massmediamania/GoogleDrive/EditedDataset"
+
+use "editeddata.dta"
+
+set graphics off 
+
+gen disasterid = _n
+
+replace ratio1=0.001 if ratio1==0
+replace coverage=0.1 if coverage==0
+replace totaldeaths=0.1 if totaldeaths==0
+replace totalaffected=0.1 if totalaffected==0
 
 gen logratio1 = ln(ratio1)
-replace logratio1 = -4.7 if logratio1==.
+
+gen logcoverage = ln(coverage)
+
+gen logdeaths = ln(totaldeaths)
+
+gen logaffected = ln(totalaffected)
 
 encode disastertype, generate(distype)
 
-gen logaffected = ln(totalaffected)
-replace logaffected=0 if logaffected==.
+
 
 
 //relationship between #affected and #deaths
@@ -61,6 +73,18 @@ twoway (scatter coverageestimate logcoverage) (lfit coverageestimate logcoverage
 regress logcoverage logratio1 logdeaths northeastlocation
 
 regress logcoverage logratio1 logdeaths northeastlocation urbanlocation
+
+
+regress logcoverage logratio1 logdeaths  i.distype i.year
+predict residual2, r
+predict coverageestimate2, xb
+
+sort urbanlocation
+
+twoway (histogram residual2 if urbanlocation==1, color(green)) (histogram residual2 if urbanlocation==0, fcolor(none) lcolor(black)), legend(order(1 "Urban" 2 "Rural" ))
+
+
+
 
 
 
