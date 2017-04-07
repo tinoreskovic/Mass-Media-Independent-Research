@@ -1,0 +1,65 @@
+//merging datasets
+
+
+cd "/Users/milisanwalka/Desktop/Brown/Classes/Spring2017/massmediamania/GoogleDrive/EditedDataset"
+
+//use "editeddata.dta"
+
+merge 1:1 disasterid using tweets_n103.dta
+
+drop tstart tend newsearchterm
+
+//this is where the analysis starts
+
+gen tweeted =0
+replace tweeted = 1 if hindu_tweets!=0 | toi_tweets!=0 | ht_tweets!=0 | dna_tweets!=0
+
+gen welltweeted = 0
+replace welltweeted = 1 if hindu_tweets!=0 & toi_tweets!=0 & ht_tweets!=0 & dna_tweets!=0
+
+gen avg_rt = (toi_avg_rt+ht_avg_rt+dna_avg_rt+hindu_avg_rt)/4
+gen avg_fav = (toi_avg_fav+ht_avg_fav+dna_avg_fav+hindu_avg_fav)/4 
+gen max_rt = max(toi_max_rt, ht_max_rt, dna_max_rt, hindu_max_rt)
+gen max_fav = max(toi_max_fav, ht_max_fav, dna_max_fav, hindu_max_fav) 
+
+twoway(scatter avg_fav year) if tweeted==1
+ 
+twoway(scatter avg_rt year) if tweeted==1
+
+twoway (scatter avg_rt avg_fav) (lfit avg_rt avg_fav) if tweeted==1, by(urbanlocation)
+
+bys urbanlocation: sum avg_fav if tweeted==1
+
+bys urbanlocation: sum avg_rt if tweeted==1
+
+reg avg_fav logdeaths i.distype i.year urbanlocation if tweeted==1
+reg avg_rt logdeaths i.distype i.year urbanlocation if tweeted==1
+reg logratio1 logdeaths i.distype i.year urbanlocation if tweeted==1
+
+twoway (scatter avg_rt logratio1) (lfit avg_rt logratio1), by(urbanlocation)
+
+twoway (scatter avg_fav logratio1) (lfit avg_fav logratio1), by(urbanlocation)
+
+reg toi_tweets logdeaths toi_avg_rt urbanlocation i.distype i.year if toi_tweets>0
+
+gen count = 0
+
+foreach x of varlist toi_tweets ht_tweets dna_tweets hindu_tweets {
+replace count = count + 1 if `x'>0
+} 
+
+gen new_avg_rt = avg_rt*4/count
+gen new_avg_fav = avg_fav*4/count
+
+gen tweets = toi_tweets + ht_tweets + dna_tweets + hindu_tweets  
+
+bys year urbanlocation: sum new_avg_fav if tweeted==1
+bys year urbanlocation: sum new_avg_rt if tweeted==1
+
+reg avg_fav tweets logdeaths i.distype i.year urbanlocation if tweeted==1
+reg avg_rt logdeaths i.distype i.year urbanlocation if tweeted==1
+reg logratio1 logdeaths i.distype i.year urbanlocation if tweeted==1
+
+
+
+
