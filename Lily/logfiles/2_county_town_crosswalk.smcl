@@ -1,9 +1,9 @@
 {smcl}
-{txt}{sf}{ul off}{.-}
+{com}{sf}{ul off}{txt}{.-}
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/2_county_town_crosswalk.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res} 5 Feb 2017, 17:22:13
+ {txt}opened on:  {res} 9 Apr 2017, 13:31:20
 {txt}
 {com}. 
 . global input "~/Google Drive/Mass Media/Lily/Data/State County Lists/"
@@ -555,7 +555,7 @@ str26, now str27 to accommodate using data's values)
       {txt}name:  {res}<unnamed>
        {txt}log:  {res}/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/2_county_town_crosswalk.smcl
   {txt}log type:  {res}smcl
- {txt}closed on:  {res} 5 Feb 2017, 17:22:25
+ {txt}closed on:  {res} 9 Apr 2017, 13:31:49
 {txt}{.-}
 {smcl}
 {txt}{sf}{ul off}

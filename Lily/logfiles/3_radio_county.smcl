@@ -1,9 +1,9 @@
 {smcl}
-{txt}{sf}{ul off}{.-}
+{com}{sf}{ul off}{txt}{.-}
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/3_radio_county.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res} 5 Feb 2017, 17:23:52
+ {txt}opened on:  {res}20 Mar 2017, 13:45:38
 {txt}
 {com}. 
 . 
@@ -192,7 +192,7 @@ str14, now str21 to accommodate using data's values)
       {txt}name:  {res}<unnamed>
        {txt}log:  {res}/Users/lilyhoffman/Documents/Mass-Media-Independent-Research/Lily/logfiles/3_radio_county.smcl
   {txt}log type:  {res}smcl
- {txt}closed on:  {res} 5 Feb 2017, 17:23:52
+ {txt}closed on:  {res}20 Mar 2017, 13:45:38
 {txt}{.-}
 {smcl}
 {txt}{sf}{ul off}
