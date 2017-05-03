@@ -1,14 +1,17 @@
+eststo clear
 clear
-capture cd "C:\Users\Andrew\Dropbox\Research\SCMP\Mass_Media\Andrew\"
-capture cd "C:\Users\awjia\Dropbox\Research\SCMP\Mass_Media\Andrew\"
+loc direc "C:\Users\awjia\Dropbox\Research\SCMP\Mass_Media\Andrew"
+//loc direc_alt "C:\Users\awjia\Google Drive\Mass Media\Andrew" 
+cd `direc'
+
 set more off
 
 import delimited using "Derived\SCMP_data.csv"
 qui sum
 scalar month_count = r(N)
-
 gen scmp = 1
 save "Analysis\Data.dta", replace
+
 import delimited using "Derived\STD_data.csv", clear
 append using "Analysis\Data.dta"
 replace scmp = 0 if scmp == .
@@ -26,27 +29,15 @@ merge 1:m month using "Analysis\Data.dta"
 drop _merge
 save "Analysis\Data.dta", replace
 
-/*
-import delimited using "Derived\alexa_hket.csv", varn(nonames) asfloat clear
-ren (v1 v2) (month alexa)
-merge 1:m month using "Analysis\Data.dta"
-drop _merge
-*/
-
-ren (v1 v2 v3 v4 v5) (xinhua_count coll_count lead_count count acq)
+ren (v1 v2 v3 v4 v5 v6 v7 v8) (xinhua_count coll_count pb_count pd_count local_count lead_count count acq)
 gen acq_scmp = scmp*acq
 gen xinhua_share = xinhua_count / count
 gen coll_share = coll_count / count
+gen pb_share = pb_count / local_count
 gen lead_share = lead_count / count
 
 sort scmp month
 save "Analysis\Data.dta", replace
-
-/*
-bysort scmp: egen av_alexa = mean(alexa)
-gen dev_alexa = -(alexa-av_alexa)/av_alexa
-gen dev_alexa_scmp = dev_alexa * scmp
-*/
 
 gen gtrends_scmp = gtrends * scmp
 
@@ -59,84 +50,74 @@ drop offset
 label var scmp "SCMP"
 label var acq "Acquired"
 label var acq_scmp "Acquired * SCMP"
-label var gtrends_scmp "SCMP * Google Trends"
+label var gtrends_scmp "SCMP * Google Trends Index"
+label var month "Month"
+label var pb_share "Pro-Beijing share"
+label var lead_share "CCP share"
+label var xinhua_share "Xinhua share"
+label var coll_share "Collective action tokens"
 
 save "Analysis\Data.dta", replace
 
 ********************************************************************************
 *regressions
 
-capture cd "C:\Users\Andrew\Dropbox\Research\SCMP\Mass_Media\Andrew\Analysis"
-capture cd "C:\Users\awjia\Dropbox\Research\SCMP\Mass_Media\Andrew\Analysis"
+cd `"Analysis"'
 
-*lead
+foreach measure in pb_share lead_share xinhua_share coll_share {
+	sum `measure' if month < 0 & scmp == 1
+	loc `measure'_mean_scmp_pre = r(mean)
+	loc `measure'_sd_scmp_pre = r(sd)
+	
+	sum `measure' if month < 0 & scmp == 0
+	loc `measure'_mean_std_pre = r(mean)
+	loc `measure'_sd_std_pre = r(sd)
+	}
+
+foreach share in pb lead xinhua coll {
+	sum `share'_share if month < 0 & scmp == 1
+		loc measure_mean_scmp_pre = r(mean)
+		loc measure_sd_scmp_pre = r(sd)	
+	sum `share'_share if month < 0 & scmp == 0
+		loc measure_mean_std_pre = r(mean)
+		loc measure_sd_std_pre = r(sd)
+
+	reg `share'_share acq_scmp scmp acq, vce(robust)
+		estadd loc measure_mean_scmp_pre
+		estadd loc measure_sd_scmp_pre
+		eststo `share'1
+	reg `share'_share acq_scmp scmp acq gtrends_scmp, vce(robust)
+		estadd loc measure_mean_std_pre
+		estadd loc measure_sd_std_pre
+		eststo `share'2
+		}
+
+esttab pb1 pb2 lead1 lead2 xinhua1 xinhua2 coll1 coll2 using "Tables\main.tex", replace compress se r2 label title(Main Results\label{table:main}) ///
+mtitles("Pro-Beijing" "Pro-Beijing" "CCP" "CCP" "Xinhua" "Xinhua" "Coll. Action" "Coll. Action") ///		
+stats(N r2 measure_mean_scmp_pre measure_sd_scmp_pre measure_mean_std_pre measure_sd_std_pre, ///
+labels("Observations" "R^2" "SCMP preacq. mean" "SCMP preacq. SD" "STD preacq. mean" "STD preacq. SD") fmt(0 3 3 3 3 3)) ///
+substitute("{table}" "{sidewaystable}")
+		
 eststo clear
-
-reg lead_share scmp acq acq_scmp, vce(robust)
-eststo lead1
-
-reg lead_share scmp acq acq_scmp gtrends_scmp, vce(robust)
-eststo lead2
-
-*xh
-
-reg xinhua_share scmp acq acq_scmp, vce(robust)
-eststo xh1
-
-reg xinhua_share scmp acq acq_scmp gtrends_scmp, vce(robust)
-eststo xh2
-
-*coll
-
-reg coll_share scmp acq acq_scmp, vce(robust)
-eststo coll1
-
-reg coll_share scmp acq acq_scmp gtrends_scmp, vce(robust)
-eststo coll2
-
-capture esttab lead1 lead2 using "C:\Users\Andrew\Google Drive\Mass Media\Andrew\Tables\main_lead.tex", replace compress se r2 label title(Main Results: Leader Share) width(0.75\textwidth)
-capture esttab lead1 lead2 using "C:\Users\awjia\Google Drive\Mass Media\Andrew\Tables\main_lead.tex", replace compress se r2 label title(Main Results: Leader Share) width(0.75\textwidth)
-
-capture esttab xh1 xh2 using "C:\Users\Andrew\Google Drive\Mass Media\Andrew\Tables\main_xh.tex", replace compress se r2 label title(Main Results: Xinhua Share) width(0.75\textwidth)
-capture esttab xh1 xh2 using "C:\Users\awjia\Google Drive\Mass Media\Andrew\Tables\main_xh.tex", replace compress se r2 label title(Main Results: Xinhua Share) width(0.75\textwidth)
-
-capture esttab coll1 coll2 using "C:\Users\Andrew\Google Drive\Mass Media\Andrew\Tables\main_coll.tex", replace compress se r2 label title(Main Results: Collective Action Share) width(0.75\textwidth)
-capture esttab coll1 coll2 using "C:\Users\awjia\Google Drive\Mass Media\Andrew\Tables\main_coll.tex", replace compress se r2 label title(Main Results: Collective Action Share) width(0.75\textwidth)
-
-esttab using "main.rtf", replace compress se r2 label
-
+estpost tabstat pb_share lead_share xinhua_share coll_share, listwise statistics(mean sd min max) columns(statistics)
+esttab using "Tables\main_summary.tex", cells("mean sd min max") mtitles("Mean" "Std. dev" "Min" "Max") nonumber noobs collabels(none) replace
 ************************************************
 sort month 
 
-twoway line gtrends month
-graph export "gtrends.png", replace
-twoway (line lead_share month if scmp == 1) (line lead_share month if scmp == 0)
-graph export "lead_share.png", replace
-twoway (line xinhua_share month if scmp == 1) (line xinhua_share month if scmp == 0)
-graph export "xinhua_share.png", replace
-twoway (line coll_share month if scmp == 1) (line coll_share month if scmp == 0)
-graph export "coll_share.png", replace
+twoway (line gtrends month, xaxis(1 2) xlab(-19 "Occupy Central Protests", axis(2))), xline(-19) xtitle("", axis(2)) xlab(-25(10)11, axis(1)) ytitle(Google Trends Index)
+graph export "Figures\gtrends.png", replace
 
-/*
-foreach control of varlist gtrends_scmp {
-	reg lead_share `control'
-	predict lead_net, re
-	reg xinhua_share `control'
-	predict xinhua_net, re
-	reg coll_share `control'
-	predict coll_net, re
+loc measure_opt legend(label(1 "SCMP") label(2 "STD")) xtitle("", axis(1)) xline(0) xlab(0 "Acquisition", axis(1)) xlab(-25(5)11, axis(2))
 
-	twoway (line lead_net month if scmp == 1) (line lead_net month if scmp == 0), legend(label(1 "SCMP") label(2 "STD"))
-	graph export `"lead_share_`control'.png"', replace
-	twoway (line xinhua_net month if scmp == 1) (line xinhua_net month if scmp == 0), legend(label(1 "SCMP") label(2 "STD"))
-	graph export `"xinhua_share_`control'.png"', replace
-	twoway (line coll_net month if scmp == 1) (line coll_net month if scmp == 0), legend(label(1 "SCMP") label(2 "STD"))
-	graph export `"coll_share_`control'.png"', replace
-	drop lead_net
-	drop xinhua_net
-	drop coll_net
-	}
-*/
+twoway (line pb_share month if scmp == 1) (line pb_share month if scmp == 0, xaxis(1 2)), `measure_opt'
+graph export "Figures\pb_share.png", replace
+twoway (line lead_share month if scmp == 1) (line lead_share month if scmp == 0, xaxis(1 2)), `measure_opt'
+graph export "Figures\lead_share.png", replace
+twoway (line xinhua_share month if scmp == 1) (line xinhua_share month if scmp == 0, xaxis(1 2)), `measure_opt'
+graph export "Figures\xinhua_share.png", replace
+twoway (line coll_share month if scmp == 1) (line coll_share month if scmp == 0, xaxis(1 2)), `measure_opt'
+graph export "Figures\coll_share.png", replace
+
 ******************************falsification*************************************
 
 qui sum month
@@ -147,7 +128,54 @@ gen acq_f = 0
 gen acq_scmp_f = 0
 gen histo = .
 
-*falsification for leader
+
+********************falsification for Pro-Beijing*******************************
+foreach i of num `=start_f'/`=end_f' {
+	replace acq_f = 0
+	replace acq_f = 1 if month >= `i'
+	replace acq_scmp_f = 0
+	replace acq_scmp_f = acq_f * scmp
+	reg pb_share scmp acq_f acq_scmp_f
+	mat b = e(b)
+	loc j = `i' - start_f + 1
+	scalar b`j' = b[1, 3]
+}
+
+scalar list
+
+replace histo = .
+qui foreach i of num `=start_f'/`=end_f' {
+	loc j = `i' - start_f + 1
+	replace histo = scalar(b`j') if _n == `j'
+}
+label var histo "Pro-Beijing share coefficients"
+hist histo
+graph save fals_pb, replace
+
+*with controls
+foreach i of num `=start_f'/`=end_f' {
+	replace acq_f = 0
+	replace acq_f = 1 if month >= `i'
+	replace acq_scmp_f = 0
+	replace acq_scmp_f = acq_f * scmp
+	qui reg pb_share scmp acq_f acq_scmp_f gtrends_scmp
+	mat b = e(b)
+	loc j = `i' - start_f + 1
+	scalar b`j' = b[1, 3]
+}
+
+scalar list
+
+replace histo = .
+qui foreach i of num `=start_f'/`=end_f' {
+	loc j = `i' - start_f + 1
+	replace histo = scalar(b`j') if _n == `j'
+}
+label var histo "Pro-Beijing share coefficients, control"
+hist histo
+graph save fals_pb_c, replace
+
+*******************falsification for leader*************************************
 foreach i of num `=start_f'/`=end_f' {
 	replace acq_f = 0
 	replace acq_f = 1 if month >= `i'
@@ -193,7 +221,7 @@ label var histo "Leader share coefficients, control"
 hist histo
 graph save fals_lead_c, replace
 
-*falsification for xinhua
+**********************falsification for xinhua**********************************
 foreach i of num `=start_f'/`=end_f' {
 	replace acq_f = 0
 	replace acq_f = 1 if month >= `i'
@@ -239,7 +267,7 @@ label var histo "Xinhua share coefficients, control"
 hist histo
 graph save fals_xinhua_c, replace
 
-*falsification for coll
+********************falsification for coll**************************************
 foreach i of num `=start_f'/`=end_f' {
 	replace acq_f = 0
 	replace acq_f = 1 if month >= `i'
@@ -285,7 +313,7 @@ label var histo "Coll action share coefficients, control"
 hist histo
 graph save fals_coll_c, replace
 
-graph combine fals_lead.gph fals_xinhua.gph fals_coll.gph fals_lead_c.gph fals_xinhua_c.gph fals_coll_c.gph
-graph export "fals.png", replace
+graph combine fals_pb.gph fals_lead.gph fals_xinhua.gph fals_coll.gph fals_pb_c.gph fals_lead_c.gph fals_xinhua_c.gph fals_coll_c.gph, cols(2)
+graph export "Figures\fals.png", replace
 
 graph drop _all

@@ -9,4 +9,5 @@ cos_dist_XH_ET(2014, 4, 2017, 2)
 
 for paper in ['SCMP', 'STD']:
     for d in [0, 1]:
+        print(d)
         build_data(paper, 2014, 4, 2017, 2, d)

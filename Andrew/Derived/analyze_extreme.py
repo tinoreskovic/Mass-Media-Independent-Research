@@ -133,15 +133,15 @@ def bigrams_XH_ET(top = 20, start_yr = 2015, start_mo = 7, end_yr = 2016, end_mo
     print(np.transpose(ug_array))
     print(np.transpose(bg_array))
 
-    with open('Andrew\\Derived\\' + 'rel' + '_ug' + '.csv', 'w', newline = '') as fp:
-        a = csv.writer(fp, delimiter=',')
-        a.writerows(np.transpose(ug_array))
-    with open('Andrew\\Derived\\' + 'rel' + '_bg' + '.csv', 'w', newline = '') as fp:
-        a = csv.writer(fp, delimiter=',')
-        a.writerows(np.transpose(bg_array))
-
     bg_array_sort = np.sort(np.transpose(bg_array))
     ug_array_sort = np.sort(np.transpose(ug_array))
+
+    with open('Andrew\\Derived\\' + 'rel' + '_ug' + '.csv', 'w', newline = '') as fp:
+        a = csv.writer(fp, delimiter=',')
+        a.writerows(ug_array_sort)
+    with open('Andrew\\Derived\\' + 'rel' + '_bg' + '.csv', 'w', newline = '') as fp:
+        a = csv.writer(fp, delimiter=',')
+        a.writerows(bg_array_sort)
 
     bg_array_sort = bg_array_sort[:, 0]
 

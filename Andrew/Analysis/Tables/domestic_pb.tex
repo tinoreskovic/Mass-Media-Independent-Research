@@ -1,0 +1,29 @@
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Domestic Results: Pro-Beijing Share\label{pbdomestic}}
+\begin{tabular*}{0.75\textwidth}{@{\hskip\tabcolsep\extracolsep\fill}l*{2}{c}}
+\hline\hline
+                &\multicolumn{1}{c}{(1)}         &\multicolumn{1}{c}{(2)}         \\
+\hline
+SCMP            &   0.0350\sym{*}  &   0.0634         \\
+                & (0.0156)         & (0.0713)         \\
+[1em]
+Acquired        &  -0.0576\sym{*}  &  -0.0576\sym{*}  \\
+                & (0.0267)         & (0.0269)         \\
+[1em]
+Acquired * SCMP &  -0.0202         &  -0.0241         \\
+                & (0.0320)         & (0.0324)         \\
+[1em]
+SCMP * Google Trends Index&                  &-0.000757         \\
+                &                  &(0.00201)         \\
+[1em]
+Constant        &    0.521\sym{***}&    0.521\sym{***}\\
+                & (0.0109)         & (0.0110)         \\
+\hline
+Observations    &       70         &       70         \\
+\(R^{2}\)       &    0.267         &    0.269         \\
+\hline\hline
+\multicolumn{3}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{3}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
+\end{tabular*}
+\end{table}

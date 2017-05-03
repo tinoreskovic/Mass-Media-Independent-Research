@@ -1,0 +1,29 @@
+\begin{table}[htbp]\centering
+\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi}
+\caption{Main Results: Collective Action Share\label{coll}}
+\begin{tabular*}{0.75\textwidth}{@{\hskip\tabcolsep\extracolsep\fill}l*{2}{c}}
+\hline\hline
+                &\multicolumn{1}{c}{(1)}         &\multicolumn{1}{c}{(2)}         \\
+\hline
+SCMP            &    0.124\sym{***}&   0.0544         \\
+                & (0.0127)         & (0.0389)         \\
+[1em]
+Acquired        &  -0.0195         &  -0.0195         \\
+                & (0.0132)         & (0.0133)         \\
+[1em]
+Acquired * SCMP &   0.0257         &   0.0351         \\
+                & (0.0176)         & (0.0180)         \\
+[1em]
+SCMP * Google Trends Index&                  &  0.00184         \\
+                &                  &(0.00103)         \\
+[1em]
+Constant        &    0.305\sym{***}&    0.305\sym{***}\\
+                & (0.0102)         & (0.0103)         \\
+\hline
+Observations    &       70         &       70         \\
+\(R^{2}\)       &    0.725         &    0.734         \\
+\hline\hline
+\multicolumn{3}{l}{\footnotesize Standard errors in parentheses}\\
+\multicolumn{3}{l}{\footnotesize \sym{*} \(p<0.05\), \sym{**} \(p<0.01\), \sym{***} \(p<0.001\)}\\
+\end{tabular*}
+\end{table}

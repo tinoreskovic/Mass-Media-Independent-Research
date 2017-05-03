@@ -4,6 +4,5 @@
  assembl
  protest
  mass 
- occupy
  demonstr
  movement
